@@ -1,18 +1,18 @@
 // https://developer.github.com/v3/issues/comments/#edit-a-comment
-const fetch = import.meta.require("node-fetch")
+import { fetchUrl } from "@jsenv/server"
 
 export const updatePullRequestComment = async ({
-  githubApiToken,
+  githubToken,
   repositoryName,
   repositoryOwner,
-  pullRequestNumber,
   commentId,
   commentBody,
+  pullRequestNumber,
 }) => {
   let updatePullRequestCommentResponse
   try {
     updatePullRequestCommentResponse = await genericUpdatePullRequestComment({
-      githubApiToken,
+      githubToken,
       repositoryOwner,
       repositoryName,
       commentId,
@@ -37,7 +37,7 @@ export const updatePullRequestComment = async ({
 }
 
 const genericUpdatePullRequestComment = async ({
-  githubApiToken,
+  githubToken,
   repositoryOwner,
   repositoryName,
   commentId,
@@ -45,9 +45,9 @@ const genericUpdatePullRequestComment = async ({
 }) => {
   const href = `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/issues/comments/${commentId}`
   const body = JSON.stringify({ body: commentBody })
-  const response = await fetch(href, {
+  const response = await fetchUrl(href, {
     headers: {
-      authorization: `token ${githubApiToken}`,
+      "authorization": `token ${githubToken}`,
       "content-length": Buffer.byteLength(body),
     },
     method: "PATCH",
@@ -59,9 +59,9 @@ const genericUpdatePullRequestComment = async ({
 const createErrorWhileUpdatingPullRequestComment = ({
   error,
   commentId,
-  pullRequestNumber,
   repositoryName,
   repositoryOwner,
+  pullRequestNumber,
 }) =>
   new Error(`error while updating pull request comment.
 error : ${error.stack}

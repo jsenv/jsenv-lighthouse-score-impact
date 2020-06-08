@@ -1,19 +1,16 @@
-const fetch = import.meta.require("node-fetch")
+import { fetchUrl } from "@jsenv/server"
 
-const gistIdRegex = new RegExp(
-  "https:\\/\\/googlechrome\\.github\\.io\\/lighthouse\\/viewer\\/\\?gist=([a-zA-Z0-9_]+)",
-)
-
-export const getPullRequestLighthouseComment = async ({
-  githubApiToken,
+export const getPullRequestCommentMatching = async ({
   repositoryOwner,
   repositoryName,
   pullRequestNumber,
+  githubToken,
+  regex,
 }) => {
   let listPullRequestCommentResponse
   try {
     listPullRequestCommentResponse = await listPullRequestComment({
-      githubApiToken,
+      githubToken,
       repositoryOwner,
       repositoryName,
       pullRequestNumber,
@@ -35,7 +32,7 @@ export const getPullRequestLighthouseComment = async ({
 
   const commentList = await listPullRequestCommentResponse.json()
   const comment = commentList.find(({ body }) => {
-    const match = body.match(gistIdRegex)
+    const match = body.match(regex)
     if (!match) return false
     return true
   })
@@ -43,16 +40,16 @@ export const getPullRequestLighthouseComment = async ({
 }
 
 const listPullRequestComment = async ({
-  githubApiToken,
   repositoryOwner,
   repositoryName,
   pullRequestNumber,
+  githubToken,
 }) => {
-  const response = await fetch(
+  const response = await fetchUrl(
     `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/issues/${pullRequestNumber}/comments`,
     {
       headers: {
-        authorization: `token ${githubApiToken}`,
+        authorization: `token ${githubToken}`,
       },
       method: "GET",
     },
@@ -66,16 +63,11 @@ const createErrorWhileSearchingGistInPullRequestComments = ({
   repositoryName,
   repositoryOwner,
 }) =>
-  new Error(`error while searching gist in pull request comments.
+  new Error(`error while searching in pull request comments.
 error: ${error.stack}
 pull request number: ${pullRequestNumber}
 repository name: ${repositoryName}
 repository owner: ${repositoryOwner}`)
-
-export const commentToGistId = (comment) => {
-  const result = comment.body.match(gistIdRegex)
-  return result[1]
-}
 
 const createUnexpectedResponseForListPullRequestComment = ({ response, responseBodyAsJson }) =>
   new Error(`list pull request comment failed: response status should be 200.
