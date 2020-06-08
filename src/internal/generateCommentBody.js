@@ -1,10 +1,17 @@
+/*
+
+TODO:
+
+faire comme dans filesize impact
+
+faire un comparatif, proposer un lien vers les deux report (celui de la branche et celui apres merge)
+pour le comparatif on va commencer tranquilou avec just le score
+
+*/
+
 import { lighthouseReportToScoreMap } from "./lighthouseReportToScoreMap.js"
 
-export const createPullRequestCommentMarkdown = ({
-  lighthouseReport,
-  lighthouseProductionReport,
-  gistId,
-}) => {
+export const generateCommentBody = ({ lighthouseReport, lighthouseProductionReport, gistId }) => {
   const title = `[light house report](https://googlechrome.github.io/lighthouse/viewer/?gist=${gistId})`
   const scoreMarkdown = lighthouseProductionReport
     ? generateLightHouseReportDiffMarkdown(lighthouseReport, lighthouseProductionReport)

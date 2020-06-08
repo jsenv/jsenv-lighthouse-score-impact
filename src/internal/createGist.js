@@ -1,10 +1,10 @@
-const fetch = import.meta.require("node-fetch")
+import { fetchUrl } from "@jsenv/server"
 
-export const createGist = async ({ githubApiToken, files }) => {
+export const createGist = async ({ githubToken, files }) => {
   let createGistResponse
   try {
     createGistResponse = await genericCreateGist({
-      githubApiToken,
+      githubToken,
       files,
     })
   } catch (e) {
@@ -25,11 +25,11 @@ export const createGist = async ({ githubApiToken, files }) => {
 }
 
 // https://developer.github.com/v3/gists/#create-a-gist
-const genericCreateGist = async ({ githubApiToken, files = {}, description, secret = false }) => {
+const genericCreateGist = async ({ githubToken, files = {}, description, secret = false }) => {
   const body = JSON.stringify({ files, description, public: !secret })
-  const response = await fetch(`https://api.github.com/gists`, {
+  const response = await fetchUrl(`https://api.github.com/gists`, {
     headers: {
-      authorization: `token ${githubApiToken}`,
+      "authorization": `token ${githubToken}`,
       "content-length": Buffer.byteLength(body),
     },
     method: "POST",

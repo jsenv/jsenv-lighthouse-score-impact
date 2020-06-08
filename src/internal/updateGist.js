@@ -1,10 +1,10 @@
-const fetch = import.meta.require("node-fetch")
+import { fetchUrl } from "@jsenv/server"
 
-export const updateGist = async ({ githubApiToken, gistId, files }) => {
+export const updateGist = async (gistId, { githubToken, files }) => {
   let updateGistResponse
   try {
     updateGistResponse = await genericUpdateGist({
-      githubApiToken,
+      githubToken,
       gistId,
       files,
     })
@@ -20,14 +20,15 @@ export const updateGist = async ({ githubApiToken, gistId, files }) => {
       responseBodyAsJson: await updateGistResponse.json(),
     })
   }
-  return updateGistResponse
+  const gist = await updateGistResponse.json()
+  return gist
 }
 
-const genericUpdateGist = async ({ githubApiToken, gistId, files = {}, description }) => {
+const genericUpdateGist = async ({ githubToken, gistId, files = {}, description }) => {
   const body = JSON.stringify({ files, description })
-  const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+  const response = await fetchUrl(`https://api.github.com/gists/${gistId}`, {
     headers: {
-      authorization: `token ${githubApiToken}`,
+      "authorization": `token ${githubToken}`,
       "content-length": Buffer.byteLength(body),
     },
     method: "PATCH",

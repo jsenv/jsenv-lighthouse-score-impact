@@ -1,12 +1,9 @@
 import { fetchUrl } from "@jsenv/server"
 
-export const getPullRequestCommentMatching = async ({
-  repositoryOwner,
-  repositoryName,
-  pullRequestNumber,
-  githubToken,
-  regex,
-}) => {
+export const getPullRequestCommentMatching = async (
+  predicate,
+  { repositoryOwner, repositoryName, pullRequestNumber, githubToken },
+) => {
   let listPullRequestCommentResponse
   try {
     listPullRequestCommentResponse = await listPullRequestComment({
@@ -31,11 +28,7 @@ export const getPullRequestCommentMatching = async ({
   }
 
   const commentList = await listPullRequestCommentResponse.json()
-  const comment = commentList.find(({ body }) => {
-    const match = body.match(regex)
-    if (!match) return false
-    return true
-  })
+  const comment = commentList.find(predicate)
   return comment
 }
 
