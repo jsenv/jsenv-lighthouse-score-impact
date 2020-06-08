@@ -11,11 +11,18 @@ pour le comparatif on va commencer tranquilou avec just le score
 
 import { lighthouseReportToScoreMap } from "./lighthouseReportToScoreMap.js"
 
-export const generateCommentBody = ({ lighthouseReport, lighthouseProductionReport, gistId }) => {
-  const title = `[light house report](https://googlechrome.github.io/lighthouse/viewer/?gist=${gistId})`
-  const scoreMarkdown = lighthouseProductionReport
-    ? generateLightHouseReportDiffMarkdown(lighthouseReport, lighthouseProductionReport)
-    : generateLightHouseReportMarkdown(lighthouseReport)
+export const generateCommentBody = ({
+  baseReport,
+  headReport,
+  baseGist,
+  headGist,
+  pullRequestBase,
+  pullRequestHead,
+}) => {
+  const title = `[light house report](https://googlechrome.github.io/lighthouse/viewer/?gist=${baseGist.id})`
+  const scoreMarkdown = headReport
+    ? generateLightHouseReportDiffMarkdown(baseReport, headReport)
+    : generateLightHouseReportMarkdown(baseReport)
 
   return `${title}
 ---

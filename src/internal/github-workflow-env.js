@@ -4,10 +4,10 @@ import { readFile } from "@jsenv/util"
 export const readGithubWorkflowEnv = () => {
   const eventName = process.env.GITHUB_EVENT_NAME
   if (!eventName) {
-    throw new Error(`missing process.env.GITHUB_EVENT_NAME, we are not in a github action`)
+    throw new Error(`missing process.env.GITHUB_EVENT_NAME, we are not in a github workflow`)
   }
   if (eventName !== "pull_request") {
-    throw new Error(`getOptionsFromGithubAction must be called only in a pull request action`)
+    throw new Error(`readGithubWorkflowEnv must be called only in a pull request`)
   }
 
   const githubRepository = process.env.GITHUB_REPOSITORY
