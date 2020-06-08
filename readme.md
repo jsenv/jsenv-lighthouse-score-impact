@@ -4,6 +4,8 @@
 [![build](https://travis-ci.com/dmail/lighthouse-report.svg?branch=master)](http://travis-ci.com/dmail/lighthouse-report)
 [![codecov](https://codecov.io/gh/dmail/lighthouse-report/branch/master/graph/badge.svg)](https://codecov.io/gh/lighthouse/lighthouse-report)
 
+WORK IN PROGRESS, DOCUMENTATION OUTDATED.
+
 > Generate lighthouse report programmatically. Can also auto comment pull request on github with your lighthouse report.
 
 ## Introduction
