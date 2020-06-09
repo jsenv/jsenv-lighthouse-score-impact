@@ -1,0 +1,22 @@
+name: "lighthouse-impact-action"
+description: "Get pull request impact on lighthouse"
+author: "Damien Maillard"
+branding:
+  icon: "archive"
+  color: "orange"
+inputs:
+  github-token:
+    description: "The GITHUB_TOKEN secret",
+    required: true
+  command:
+    description: "Command to run to generate lighthouse report",
+    default: "npm run generate-lighthouse-report"
+  command-outfile-path:
+    description: "Path to lighthouse report after command",
+    default: "./lighthouse/lighthouse-report.json"
+  log-level:
+    description: "Controls log verbosity during action"
+    default: "warn"
+runs:
+  using: "node14"
+  main: "dist/action.js"
