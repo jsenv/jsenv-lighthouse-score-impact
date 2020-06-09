@@ -11,13 +11,42 @@ import { generateCommentBody } from "../src/internal/generateCommentBody.js"
 const examples = {
   basic: generateCommentBody({
     baseReport: {
+      audits: {
+        whatever: {
+          score: 0.5,
+          scoreDisplayMode: "numeric",
+          description: "whatever description",
+        },
+        foo: {
+          score: 0,
+          scoreDisplayMode: "binary",
+          description: "foo description",
+        },
+      },
       categories: {
-        perf: { score: 0.5 },
+        perf: {
+          score: 0.8,
+          auditRefs: [{ id: "whatever" }, { id: "foo" }],
+          description: "Total perf score",
+        },
       },
     },
     headReport: {
+      audits: {
+        whatever: {
+          score: 0.7,
+          scoreDisplayMode: "numeric",
+        },
+        foo: {
+          score: 1,
+          scoreDisplayMode: "binary",
+          description: "foo description",
+        },
+      },
       categories: {
-        perf: { score: 0.7 },
+        perf: {
+          score: 0.9,
+        },
       },
     },
     baseGist: { id: "base" },

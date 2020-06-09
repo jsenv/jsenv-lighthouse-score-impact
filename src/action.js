@@ -1,6 +1,8 @@
 /**
 
 https://github.com/preactjs/compressed-size-action
+https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
+https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
 
 */
 
@@ -40,19 +42,6 @@ const run = async () => {
   }
 
   const [repositoryOwner, repositoryName] = githubRepository.split("/")
-
-  const githubBaseRef = process.env.GITHUB_BASE_REF
-  if (!githubBaseRef) {
-    throw new Error(`missing process.env.GITHUB_BASE_REF`)
-  }
-  const pullRequestBase = githubBaseRef
-
-  const githubHeadRef = process.env.GITHUB_HEAD_REF
-  if (!githubHeadRef) {
-    throw new Error(`missing process.env.GITHUB_HEAD_REF`)
-  }
-  const pullRequestHead = githubHeadRef
-
   const pullRequestNumber = await readPullRequestNumber({ logger })
 
   return reportLighthouseImpactIntoGithubPullRequest(
@@ -69,8 +58,6 @@ const run = async () => {
       repositoryOwner,
       repositoryName,
       pullRequestNumber,
-      pullRequestBase,
-      pullRequestHead,
     },
   )
 }
