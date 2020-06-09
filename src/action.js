@@ -64,6 +64,7 @@ const run = async () => {
     },
     {
       logLevel,
+      projectDirectoryUrl,
       githubToken,
       repositoryOwner,
       repositoryName,

@@ -8,14 +8,13 @@ import {
   assertAndNormalizeDirectoryUrl,
 } from "@jsenv/util"
 import { exec } from "./internal/exec.js"
-import { createGist } from "./internal/createGist.js"
-import { createPullRequestComment } from "./internal/createPullRequestComment.js"
-import { getGist } from "./internal/getGist.js"
-import { updateGist } from "./internal/updateGist.js"
-import { updatePullRequestComment } from "./internal/updatePullRequestComment.js"
-import { createUnexpectedGithubApiTokenError } from "./internal/errors.js"
-import { readGithubWorkflowEnv, readPullRequestNumber } from "./internal/github-workflow-env.js"
-import { getPullRequestCommentMatching } from "./internal/getPullRequestCommentMatching.js"
+import { getGist, postGist, patchGist } from "./internal/gists.js"
+import {
+  getPullRequest,
+  getPullRequestCommentMatching,
+  patchPullRequestComment,
+  postPullRequestComment,
+} from "./internal/pull-requests.js"
 import { generateCommentBody } from "./internal/generateCommentBody.js"
 
 export const reportLighthouseImpactIntoGithubPullRequest = async (
@@ -24,7 +23,11 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
     cancellationToken = createCancellationTokenForProcess(),
     logLevel,
     projectDirectoryUrl,
+    repositoryOwner,
+    repositoryName,
+    pullRequestNumber,
     githubToken,
+
     githubTokenForGist = githubToken,
     githubTokenForComment = githubToken,
   },
@@ -33,27 +36,30 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
     const logger = createLogger({ logLevel })
     projectDirectoryUrl = assertAndNormalizeDirectoryUrl(projectDirectoryUrl)
 
-    const {
-      repositoryOwner,
-      repositoryName,
-      pullRequestBase,
-      pullRequestHead,
-      githubToken,
-    } = readGithubWorkflowEnv()
-    const pullRequestNumber = await readPullRequestNumber({ logger })
-
-    if (typeof githubApiTokenForGist !== "string") {
-      throw createUnexpectedGithubApiTokenError({ githubApiToken: githubApiTokenForGist })
+    if (typeof githubTokenForGist !== "string") {
+      throw new TypeError(`githubTokenForGist must be a string but received ${githubTokenForGist}`)
     }
+    if (typeof githubTokenForComment !== "string") {
+      throw new TypeError(
+        `githubTokenForComment must be a string but received ${githubTokenForComment}`,
+      )
+    }
+
+    const pullRequest = await getPullRequest(
+      { repositoryOwner, repositoryName, pullRequestNumber },
+      { cancellationToken },
+    )
+    // here we could detect fork and so on
+    const pullRequestBase = pullRequest.base.ref
+    const pullRequestHead = pullRequest.head.ref
 
     await exec(`git fetch --no-tags --prune --depth=1 origin ${pullRequestBase}`)
     await exec(`git checkout origin/${pullRequestBase}`)
-    // await exec(`git log -1`)
     await exec(`npm install`)
 
     const baseReport = await generateLighthouseReport()
 
-    await exec(`git fetch --no-tags --prune origin ${process.env.GITHUB_REF}`)
+    await exec(`git fetch --no-tags --prune origin ${pullRequestHead}`)
     await exec(`git merge FETCH_HEAD`)
     await exec(`npm install`)
 
@@ -82,7 +88,6 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
     })
 
     const baseGistData = {
-      githubToken,
       files: {
         [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-base-lighthouse-report.json`]: {
           content: JSON.stringify(baseReport),
@@ -90,7 +95,6 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
       },
     }
     const headGistData = {
-      githubToken,
       files: {
         [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-merged-lighthouse-report.json`]: {
           content: JSON.stringify(headReport),
@@ -122,28 +126,24 @@ ${gistIdToUrl(headGistId)}`)
       ])
       if (baseGist) {
         logger.debug("base gist found, updating it")
-        baseGist = await updateGist(baseGist.id, baseGistData)
+        baseGist = await patchGist(baseGist.id, baseGistData, { githubToken })
       } else {
         logger.debug(`base gist not found, creating it`)
-        baseGist = await createGist(baseGistData)
+        baseGist = await postGist(baseGistData, { githubToken })
       }
       if (headGist) {
         logger.debug("head gist found, updating it")
-        headGist = await updateGist(headGist.id, headGistData)
+        headGist = await patchGist(headGist.id, headGistData, { githubToken })
       } else {
         logger.debug(`head gist not found, creating it`)
-        headGist = await createGist(headGistData)
+        headGist = await postGist(headGistData, { githubToken })
       }
 
       logger.debug(`updating comment at ${commentToUrl(existingComment)}`)
       const commentId = comment.id
-      const comment = await updatePullRequestComment({
-        githubToken,
-        repositoryOwner,
-        repositoryName,
-        pullRequestNumber,
+      const comment = await patchPullRequestComment(
         commentId,
-        commentBody: generateCommentBody({
+        generateCommentBody({
           baseReport,
           headReport,
           baseGist,
@@ -151,7 +151,15 @@ ${gistIdToUrl(headGistId)}`)
           pullRequestBase,
           pullRequestHead,
         }),
-      })
+        {
+          repositoryOwner,
+          repositoryName,
+          pullRequestNumber,
+        },
+        {
+          githubToken,
+        },
+      )
       logger.log("comment updated")
 
       return {
@@ -165,8 +173,8 @@ ${gistIdToUrl(headGistId)}`)
 
     logger.debug(`creating base and head gist`)
     const [baseGist, headGist] = await Promise.all([
-      createGist(baseGistData),
-      createGist(headGistData),
+      postGist(baseGistData, { githubToken }),
+      postGist(headGistData, { githubToken }),
     ])
     logger.debug(`gist created.
 --- gist for base lighthouse report ---
@@ -175,12 +183,8 @@ ${gistToUrl(baseGist)}
 ${gistToUrl(headGist)}`)
 
     logger.debug(`creating comment`)
-    const comment = await createPullRequestComment({
-      githubToken,
-      repositoryOwner,
-      repositoryName,
-      pullRequestNumber,
-      commentBody: generateCommentBody({
+    const comment = await postPullRequestComment(
+      generateCommentBody({
         baseReport,
         headReport,
         baseGist,
@@ -188,7 +192,15 @@ ${gistToUrl(headGist)}`)
         pullRequestBase,
         pullRequestHead,
       }),
-    })
+      {
+        repositoryOwner,
+        repositoryName,
+        pullRequestNumber,
+      },
+      {
+        githubToken,
+      },
+    )
     logger.debug(`comment created at ${commentToUrl(comment)}`)
 
     return {
