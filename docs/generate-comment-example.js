@@ -56,6 +56,18 @@ const examples = {
     pullRequestBase: "base",
     pullRequestHead: "head",
   }),
+  versionMismatch: generateCommentBody({
+    baseReport: {
+      lighthouseVersion: "1.0.0",
+    },
+    headReport: {
+      lighthouseVersion: "1.0.1",
+    },
+    baseGist: { id: "base" },
+    headGist: { id: "head" },
+    pullRequestBase: "base",
+    pullRequestHead: "head",
+  }),
   real: generateCommentBody({
     baseReport,
     headReport,

@@ -37,6 +37,17 @@ ${renderFooter({ baseGist, headGist, pullRequestBase, pullRequestHead })}`
 }
 
 const renderBody = ({ baseReport, headReport, pullRequestBase, pullRequestHead }) => {
+  const baseVersion = baseReport.lighthouseVersion
+  const headVersion = headReport.lighthouseVersion
+
+  if (baseVersion !== headVersion) {
+    return `---
+
+**Warning:** Impact analysis skipped because lighthouse version are different on \`${pullRequestBase}\` (${baseVersion}) and \`${pullRequestHead}\` (${headVersion}).
+
+---`
+  }
+
   return Object.keys(baseReport.categories).map((categoryName) => {
     return renderCategory(categoryName, {
       baseReport,
