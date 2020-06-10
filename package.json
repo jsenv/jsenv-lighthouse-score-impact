@@ -1,5 +1,5 @@
 {
-  "name": "@jsenv/github-pull-request-lighthouse-impact",
+  "name": "@jsenv/lighthouse-score-merge-impact",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
@@ -35,6 +35,7 @@
     "generate-comment-example": "node --no-warnings ./docs/generate-comment-example.js",
     "generate-commonjs-bundle": "node ./script/generate-commonjs-bundle/generate-commonjs-bundle.js",
     "generate-import-map": "node ./script/generate-import-map/generate-import-map.js",
+    "generate-lighthouse-report": "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
     "dist": "npm run generate-commonjs-bundle",
     "postinstall": "npm run generate-import-map",
     "prepublishOnly": "node ./script/transform-package/remove-postinstall.js && npm run dist",

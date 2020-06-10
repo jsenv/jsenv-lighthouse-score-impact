@@ -10,7 +10,7 @@ import { createRequire } from "module"
 import { createLogger } from "@jsenv/logger"
 import { resolveUrl, readFile } from "@jsenv/util"
 import { exec } from "./internal/exec.js"
-import { reportLighthouseImpactIntoGithubPullRequest } from "./reportLighthouseImpactIntoGithubPullRequest.js"
+import { reportLighthouseScoreMergeImpact } from "./reportLighthouseScoreMergeImpact.js"
 
 const require = createRequire(import.meta.url)
 
@@ -44,7 +44,7 @@ const run = async () => {
   const [repositoryOwner, repositoryName] = githubRepository.split("/")
   const pullRequestNumber = await readPullRequestNumber({ logger })
 
-  return reportLighthouseImpactIntoGithubPullRequest(
+  return reportLighthouseScoreMergeImpact(
     async () => {
       await exec(command)
       const outFileUrl = resolveUrl(outFilePath, projectDirectoryUrl)
