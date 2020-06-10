@@ -7,6 +7,8 @@ https://github.com/actions/toolkit/tree/master/packages/core
 
 import { writeFile, resolveUrl } from "@jsenv/util"
 import { generateCommentBody } from "../src/internal/generateCommentBody.js"
+import baseReport from "./report.base.json"
+import headReport from "./report.head.json"
 
 const examples = {
   basic: generateCommentBody({
@@ -49,6 +51,14 @@ const examples = {
         },
       },
     },
+    baseGist: { id: "base" },
+    headGist: { id: "head" },
+    pullRequestBase: "base",
+    pullRequestHead: "head",
+  }),
+  real: generateCommentBody({
+    baseReport,
+    headReport,
     baseGist: { id: "base" },
     headGist: { id: "head" },
     pullRequestBase: "base",

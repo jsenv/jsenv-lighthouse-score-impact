@@ -75,10 +75,9 @@ const renderCategoryScore = (
   { baseReport, headReport, pullRequestBase, pullRequestHead },
 ) => {
   const headerCells = [
-    `<th nowrap>Diff</th>`,
+    `<th nowrap>Impact</th>`,
     `<th nowrap>${pullRequestBase}</th>`,
     `<th nowrap>${pullRequestHead}</th>`,
-    `<th nowrap>Description</th>`,
   ]
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
@@ -86,12 +85,10 @@ const renderCategoryScore = (
     `<td nowrap>${formatNumericDiff(headScore - baseScore)}</td>`,
     `<td nowrap>${baseScore}</td>`,
     `<td nowrap>${headScore}</td>`,
-    `<td nowrap>${baseReport.categories[category].description}<td>`,
   ]
 
-  return `
-<h3>${category} score</h3>
-<table>
+  return `<h3>Global impact on ${category}</h3>
+  <table>
     <thead>
       <tr>
         ${headerCells.join(`
@@ -104,8 +101,7 @@ const renderCategoryScore = (
         `)}
       </tr>
     </tbody>
-  </table>
-  `
+  </table>`
 }
 
 const renderCategoryAudits = (
@@ -114,23 +110,13 @@ const renderCategoryAudits = (
 ) => {
   const impactedAuditsHeaderCells = [
     `<th nowrap>Audit</th>`,
-    `<th nowrap>Diff</th>`,
+    `<th nowrap>Impact</th>`,
     `<th nowrap>${pullRequestBase}</th>`,
     `<th nowrap>${pullRequestHead}</th>`,
-    `<th nowrap>Description</th>`,
   ]
-  const unimpactedAuditsHeaderCells = [
-    `<th nowrap>Audit</th>`,
-    `<th nowrap>Score</th>`,
-    `<th nowrap>Description</th>`,
-  ]
-  const remainingAuditsHeaderCells = [`<th nowrap>Audit</th>`, `<th nowrap>Description</th>`]
-
   const { auditRefs } = baseReport.categories[category]
 
   const impactedAudits = []
-  const unimpactedAudits = []
-  const remainingAudits = []
 
   auditRefs.forEach((auditRef) => {
     const auditId = auditRef.id
@@ -139,15 +125,54 @@ const renderCategoryAudits = (
 
     const { scoreDisplayMode } = baseAudit
 
+    // manual checks cannot be compared
+    // and there is definitely no use to display them
+    if (scoreDisplayMode === "manual") {
+      return
+    }
+
+    // informative audit will mostly be skipped
+    if (scoreDisplayMode === "informative") {
+      const baseNumericValue = baseAudit.numericValue
+      const baseDisplayValue = baseAudit.displayValue
+      const headNumericValue = headAudit.numericValue
+      const headDisplayValue = headAudit.displayValue
+
+      if (typeof baseNumericValue !== "undefined") {
+        impactedAudits.push([
+          `<td nowrap>${auditId}</td>`,
+          `<td nowrap>${baseNumericValue === headNumericValue ? "none" : "---"}</td>`,
+          `<td nowrap>${
+            typeof baseDisplayValue === "undefined" ? baseNumericValue : baseDisplayValue
+          }</td>`,
+          `<td nowrap>${
+            typeof headDisplayValue === "undefined" ? headNumericValue : headDisplayValue
+          }</td>`,
+        ])
+        return
+      }
+      if (typeof baseDisplayValue !== "undefined") {
+        impactedAudits.push([
+          `<td nowrap>${auditId}</td>`,
+          `<td nowrap>${baseDisplayValue === headDisplayValue ? "none" : "---"}</td>`,
+          `<td nowrap>${baseDisplayValue}</td>`,
+          `<td nowrap>${headDisplayValue}</td>`,
+        ])
+        return
+      }
+      return
+    }
+
     if (scoreDisplayMode === "binary") {
       const baseScore = baseAudit.score
       const headScore = headAudit.score
 
       if (baseScore === headScore) {
-        unimpactedAudits.push([
+        impactedAudits.push([
           `<td nowrap>${auditId}</td>`,
+          `<td nowrap>none</td>`,
           `<td nowrap>${baseScore ? "✔" : "☓"}</td>`,
-          `<td nowrap>${baseAudit.description}</td>`,
+          `<td nowrap>${baseScore ? "✔" : "☓"}</td>`,
         ])
         return
       }
@@ -156,7 +181,6 @@ const renderCategoryAudits = (
         `<td nowrap>✔</td>`,
         `<td nowrap>☓</td>`,
         `<td nowrap>✔</td>`,
-        `<td nowrap>${baseAudit.description}</td>`,
       ])
       return
     }
@@ -165,12 +189,12 @@ const renderCategoryAudits = (
       const baseScore = baseAudit.score
       const headScore = headAudit.score
 
-      // no changes
       if (baseScore === headScore) {
-        unimpactedAudits.push([
+        impactedAudits.push([
           `<td nowrap>${auditId}</td>`,
+          `<td nowrap>none</td>`,
           `<td nowrap>${baseScore}</td>`,
-          `<td nowrap>${baseAudit.description}</td>`,
+          `<td nowrap>${headScore}</td>`,
         ])
         return
       }
@@ -179,20 +203,20 @@ const renderCategoryAudits = (
         `<td nowrap>${formatNumericDiff(headScore - baseScore)}</td>`,
         `<td nowrap>${baseScore}</td>`,
         `<td nowrap>${headScore}</td>`,
-        `<td nowrap>${baseAudit.description}</td>`,
       ])
       return
     }
 
-    remainingAudits.push([`<td nowrap>${auditId}</td>`, `<td nowrap>${baseAudit.description}</td>`])
+    impactedAudits.push([
+      `<td nowrap>${auditId}</td>`,
+      `<td nowrap>---</td>`,
+      `<td nowrap>---</td>`,
+      `<td nowrap>---</td>`,
+    ])
   })
 
-  return `
-  <h3>${category} audits impacts (${impactedAudits.length})</h3>
-    ${
-      impactedAudits.length === 0
-        ? ``
-        : `<table>
+  return `<h3>Detailed impact on ${category}</h3>
+  <table>
     <thead>
       <tr>
         ${impactedAuditsHeaderCells.join(`
@@ -210,60 +234,10 @@ const renderCategoryAudits = (
       </tr>
     </tbody>
   </table>`
-    }
-  <h3>${category} audits unimpacted (${unimpactedAudits.length})</h3>
-  ${
-    unimpactedAudits.length === 0
-      ? ``
-      : `
-  <table>
-    <thead>
-      <tr>
-        ${unimpactedAuditsHeaderCells.join(`
-        `)}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>${unimpactedAudits.map(
-        (cells) => `
-        ${cells.join(`
-        `)}`,
-      ).join(`
-      </tr>
-      <tr>`)}
-      </tr>
-    </tbody>
-  </table>`
-  }
-  <h3>${category} audits remaining (${remainingAudits.length})</h3>
-  ${
-    remainingAudits.length === 0
-      ? ``
-      : `
-    <table>
-    <thead>
-      <tr>
-        ${remainingAuditsHeaderCells.join(`
-        `)}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>${remainingAudits.map(
-        (cells) => `
-        ${cells.join(`
-        `)}`,
-      ).join(`
-      </tr>
-      <tr>`)}
-      </tr>
-    </tbody>
-  </table>`
-  }`
 }
 
 const renderFooter = ({ baseGist, headGist, pullRequestBase }) => {
-  return `
-<sub>
+  return `<sub>
   Impact analyzed comparing <a href="${gistIdToReportUrl(
     baseGist.id,
   )}">${pullRequestBase} report</a> and <a href="${gistIdToReportUrl(
@@ -273,8 +247,7 @@ const renderFooter = ({ baseGist, headGist, pullRequestBase }) => {
 <br />
 <sub>
   Generated by <a href="https://github.com/jsenv/jsenv-lighthouse-score-merge-impact">lighthouse score merge impact</a>
-</sub>
-`
+</sub>`
 }
 
 const gistIdToReportUrl = (gistId) => {
