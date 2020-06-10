@@ -34,9 +34,10 @@
     "upload-coverage": "node ./script/upload-coverage/upload-coverage.js",
     "generate-comment-example": "node --no-warnings ./docs/generate-comment-example.js",
     "generate-commonjs-bundle": "node ./script/generate-commonjs-bundle/generate-commonjs-bundle.js",
+    "generate-action-bundle": "node ./script/generate-action-bundle/generate-action-bundle.js",
     "generate-import-map": "node ./script/generate-import-map/generate-import-map.js",
     "generate-lighthouse-report": "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
-    "dist": "npm run generate-commonjs-bundle",
+    "dist": "npm run generate-commonjs-bundle && npm run generate-action-bundle",
     "postinstall": "npm run generate-import-map",
     "prepublishOnly": "node ./script/transform-package/remove-postinstall.js && npm run dist",
     "postpublish": "node ./script/transform-package/restore-postinstall.js"

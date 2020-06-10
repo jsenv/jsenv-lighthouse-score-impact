@@ -18,4 +18,4 @@ inputs:
     default: "warn"
 runs:
   using: "node14"
-  main: "dist/action.js"
+  main: "dist/action/action.js"
