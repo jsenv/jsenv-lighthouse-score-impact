@@ -18,5 +18,5 @@ inputs:
     description: 'Controls log verbosity during action'
     default: 'warn'
 runs:
-  using: 'node12'
+  using: 'node13'
   main: 'dist/action/action.js'
