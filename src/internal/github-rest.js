@@ -1,104 +1,99 @@
 import { fetchUrl } from "@jsenv/server"
 
 export const getGithubRessource = async (url, { githubToken, cancellationToken } = {}) => {
+  return sendHttpRequest(url, {
+    cancellationToken,
+    method: "GET",
+    headers: {
+      authorization: `token ${githubToken}`,
+    },
+    responseStatusMap: {
+      200: async (response) => {
+        const json = await response.json()
+        return json
+      },
+      404: () => null,
+    },
+  })
+}
+
+export const postGithubRessource = (url, body, { cancellationToken, githubToken } = {}) => {
+  const bodyAsString = JSON.stringify(body)
+  return sendHttpRequest(url, {
+    cancellationToken,
+    method: "POST",
+    headers: {
+      "authorization": `token ${githubToken}`,
+      "content-length": Buffer.byteLength(bodyAsString),
+    },
+    body: bodyAsString,
+    responseStatusMap: {
+      201: async (response) => {
+        const json = await response.json()
+        return json
+      },
+    },
+  })
+}
+
+export const patchGithubRessource = async (url, body, { cancellationToken, githubToken } = {}) => {
+  const bodyAsString = JSON.stringify(body)
+  return sendHttpRequest(url, {
+    cancellationToken,
+    method: "PATCH",
+    headers: {
+      "authorization": `token ${githubToken}`,
+      "content-length": Buffer.byteLength(bodyAsString),
+    },
+    body: bodyAsString,
+    responseStatusMap: {
+      200: async (response) => {
+        const json = await response.json()
+        return json
+      },
+    },
+  })
+}
+
+const sendHttpRequest = async (
+  url,
+  { cancellationToken, method, headers, body, responseStatusMap },
+) => {
   let response
   try {
     response = await fetchUrl(url, {
       cancellationToken,
-      headers: {
-        authorization: `token ${githubToken}`,
-      },
-      method: "GET",
+      method,
+      headers,
+      body,
     })
   } catch (error) {
-    throw new Error(`error while getting ${url}.
+    throw new Error(`network error during request.
+--- request method ---
+${method}
+--- request url ---
+${url}
 --- error stack ---
 ${error.stack}`)
   }
 
-  if (response.status === 404) {
-    return null
-  }
-
-  if (response.status === 200) {
-    const bodyAsJson = await response.json()
-    return bodyAsJson
+  const { status } = response
+  if (status in responseStatusMap) {
+    return responseStatusMap[response.status](response)
   }
 
   const responseBodyAsJson = await response.json()
-  throw new Error(`get failed: response status should be 200.
---- response url ----
-${response.url}
+  const error = new Error(`unexpected response status.
+--- expected response status ---
+${Object.keys(responseStatusMap).join(", ")}
 --- response status ---
 ${response.status}
+--- request method ---
+${method}
+--- request url ---
+${url}
 --- response json ---
 ${(JSON.stringify(responseBodyAsJson), null, "  ")}`)
-}
-
-export const postGithubRessource = async (url, body, { githubToken }) => {
-  let response
-  try {
-    const bodyAsString = JSON.stringify(body)
-    response = await fetchUrl(url, {
-      headers: {
-        "authorization": `token ${githubToken}`,
-        "content-length": Buffer.byteLength(bodyAsString),
-      },
-      method: "POST",
-      body: bodyAsString,
-    })
-  } catch (error) {
-    throw new Error(`
-error while posting ${url}.
---- error stack ---
-${error.stack}`)
-  }
-
-  if (response.status === 201) {
-    const ressource = await response.json()
-    return ressource
-  }
-
-  const responseBodyAsJson = await response.json()
-  throw new Error(`post failed: response status should be 201.
---- response url ----
-${response.url}
---- response status ---
-${response.status}
---- response json ---
-${(JSON.stringify(responseBodyAsJson), null, "  ")}`)
-}
-
-export const patchGithubRessource = async (url, body, { githubToken }) => {
-  let response
-
-  try {
-    const bodyAsString = JSON.stringify(body)
-    response = await fetchUrl(url, {
-      headers: {
-        "authorization": `token ${githubToken}`,
-        "content-length": Buffer.byteLength(bodyAsString),
-      },
-      method: "PATCH",
-      body: bodyAsString,
-    })
-  } catch (error) {
-    throw new Error(`error while patching ${url}.
---- error stack ---
-${error.stack}`)
-  }
-
-  if (response.status === 200) {
-    const ressource = await response.json()
-    return ressource
-  }
-
-  const responseBodyAsJson = await response.json()
-  throw new Error(`update gist failed: response status should be 200.
---- response url ----
-${response.url}
---- response status ---
-${response.status}
---- response json ---
-${(JSON.stringify(responseBodyAsJson), null, "  ")}`)
+  error.responseStatus = status
+  throw error
 }

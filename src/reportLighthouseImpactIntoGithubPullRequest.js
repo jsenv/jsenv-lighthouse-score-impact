@@ -27,8 +27,6 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
     repositoryName,
     pullRequestNumber,
     githubToken,
-    githubTokenForGist = githubToken,
-    githubTokenForComment = githubToken,
   },
 ) => {
   return wrapExternalFunction(
@@ -38,15 +36,8 @@ export const reportLighthouseImpactIntoGithubPullRequest = async (
 
       const execCommandInProjectDirectory = (command) => exec(command, { cwd: projectDirectoryUrl })
 
-      if (typeof githubTokenForGist !== "string") {
-        throw new TypeError(
-          `githubTokenForGist must be a string but received ${githubTokenForGist}`,
-        )
-      }
-      if (typeof githubTokenForComment !== "string") {
-        throw new TypeError(
-          `githubTokenForComment must be a string but received ${githubTokenForComment}`,
-        )
+      if (typeof githubToken !== "string") {
+        throw new TypeError(`githubToken must be a string but received ${githubToken}`)
       }
 
       const pullRequest = await getPullRequest(
@@ -192,8 +183,8 @@ ${existingComment.body}`)
 
         logger.debug(`update or create both gists.`)
         let [baseGist, headGist] = await Promise.all([
-          baseGistId ? getGist(baseGistId, { githubToken }) : null,
-          headGistId ? getGist(headGistId, { githubToken }) : null,
+          baseGistId ? getGist(baseGistId, { cancellationToken, githubToken }) : null,
+          headGistId ? getGist(headGistId, { cancellationToken, githubToken }) : null,
         ])
         const baseGistData = {
           files: {
@@ -209,19 +200,32 @@ ${existingComment.body}`)
             },
           },
         }
+
         if (baseGist) {
           logger.debug("base gist found, updating it")
-          baseGist = await patchGist(baseGist.id, baseGistData, { githubToken })
+          baseGist = await patchGist(baseGist.id, baseGistData, {
+            cancellationToken,
+            githubToken,
+          })
         } else {
           logger.debug(`base gist not found, creating it`)
-          baseGist = await postGist(baseGistData, { githubToken })
+          baseGist = await postGist(baseGistData, {
+            cancellationToken,
+            githubToken,
+          })
         }
         if (headGist) {
           logger.debug("head gist found, updating it")
-          headGist = await patchGist(headGist.id, headGistData, { githubToken })
+          headGist = await patchGist(headGist.id, headGistData, {
+            cancellationToken,
+            githubToken,
+          })
         } else {
           logger.debug(`head gist not found, creating it`)
-          headGist = await postGist(headGistData, { githubToken })
+          headGist = await postGist(headGistData, {
+            cancellationToken,
+            githubToken,
+          })
         }
 
         return {
@@ -230,9 +234,25 @@ ${existingComment.body}`)
         }
       }
 
-      const { baseGist, headGist } = await patchOrPostGists()
+      let baseGist
+      let headGist
+      const headerMessages = []
+      try {
+        const gists = await patchOrPostGists()
+        baseGist = gists.baseGist
+        headGist = gists.headGist
+      } catch (e) {
+        if (e.responseStatus === 401) {
+          headerMessages.push(
+            `**Warning:** Link to lighthouse reports cannot be generated because github token is not allowed to create gists.`,
+          )
+        } else {
+          throw e
+        }
+      }
       const comment = await patchOrPostComment(
         generateCommentBody({
+          headerMessages,
           baseReport,
           headReport,
           baseGist,

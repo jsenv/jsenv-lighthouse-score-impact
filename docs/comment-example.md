@@ -5,6 +5,7 @@
 <!-- head-gist-id=head -->
 <h2>Lighthouse merge impact</h2>
 
+
 <details>
   <summary>perf (+0.1)</summary>
   <h3>Global impact on perf</h3>
@@ -67,9 +68,10 @@
 
 ---
 
-**Warning:** Impact analysis skipped because lighthouse version are different on `base`(1.0.0) and `head`(1.0.1).
+**Warning:** Impact analysis skipped because lighthouse version are different on `base` (1.0.0) and `head` (1.0.1).
 
 ---
+
 <sub>
   Impact analyzed comparing <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=base">base report</a> and <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=head">report after merge</a>
 </sub>
@@ -84,6 +86,7 @@
 <!-- base-gist-id=base -->
 <!-- head-gist-id=head -->
 <h2>Lighthouse merge impact</h2>
+
 
 <details>
   <summary>performance (0)</summary>

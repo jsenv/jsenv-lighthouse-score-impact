@@ -7,7 +7,6 @@ branding:
 inputs:
   github-token:
     description: "The GITHUB_TOKEN secret",
-    required: true
   command:
     description: "Command to run to generate lighthouse report",
     default: "npm run generate-lighthouse-report"
