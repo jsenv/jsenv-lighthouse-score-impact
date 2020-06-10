@@ -1,7 +1,7 @@
-import { generateEsModuleBundle } from "@jsenv/core"
+import { generateCommonJsBundleForNode } from "@jsenv/core"
 import * as jsenvConfig from "../../jsenv.config.js"
 
-generateEsModuleBundle({
+generateCommonJsBundleForNode({
   ...jsenvConfig,
   bundleDirectoryClean: true,
   bundleDirectoryRelativeUrl: "./dist/action/",
