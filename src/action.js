@@ -1,5 +1,6 @@
 /**
 
+https://help.github.com/en/actions/creating-actions/creating-a-javascript-action
 https://github.com/preactjs/compressed-size-action
 https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
 https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
