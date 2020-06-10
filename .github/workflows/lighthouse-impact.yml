@@ -19,16 +19,10 @@ jobs:
       CI: true
     steps:
       - name: Setup git
-        env:
-          GITHUB_REPOSITORY_URL: ${{ github.repositoryUrl }}
-        run: |
-          git init
-          git remote add origin $GITHUB_REPOSITORY_URL
+        uses: actions/checkout@v2
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
       - name: Report lighthouse impact
-        uses: jsenv/jsenv-lighthouse-score-merge-impact@v1-alpha-4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: node ./.github/workflows/lighthouse-impact/report-lighthouse-impact.js

@@ -32,6 +32,7 @@ export const reportLighthouseScoreMergeImpact = async (
   return wrapExternalFunction(
     async () => {
       projectDirectoryUrl = assertAndNormalizeDirectoryUrl(projectDirectoryUrl)
+
       if (typeof githubToken !== "string") {
         throw new TypeError(`githubToken must be a string but received ${githubToken}`)
       }

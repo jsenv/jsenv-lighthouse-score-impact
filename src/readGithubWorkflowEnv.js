@@ -1,23 +1,6 @@
-/**
+import { readFileSync } from "fs"
 
-https://help.github.com/en/actions/creating-actions/creating-a-javascript-action
-https://github.com/preactjs/compressed-size-action
-https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
-https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
-
-*/
-
-import { createRequire } from "module"
-import { createLogger } from "@jsenv/logger"
-import { resolveUrl, readFile } from "@jsenv/util"
-import { exec } from "./internal/exec.js"
-import { reportLighthouseScoreMergeImpact } from "./reportLighthouseScoreMergeImpact.js"
-
-const require = createRequire(import.meta.url)
-
-const { getInput } = require("@actions/core")
-
-const run = async () => {
+export const readGithubWorkflowEnv = () => {
   const eventName = process.env.GITHUB_EVENT_NAME
   if (!eventName) {
     throw new Error(`missing process.env.GITHUB_EVENT_NAME, we are not in a github workflow`)
@@ -26,12 +9,7 @@ const run = async () => {
     throw new Error(`must be called only in a pull request`)
   }
 
-  const githubToken = getInput("github-token") || process.env.GITHUB_TOKEN
-  const logLevel = getInput("log-level")
-  const command = getInput("command")
-  const outFilePath = getInput("command-outfile-path")
-  const projectDirectoryUrl = process.cwd()
-  const logger = createLogger({ logLevel })
+  const githubToken = process.env.GITHUB_TOKEN
 
   if (!githubToken) {
     throw new Error(`missing githubToken`)
@@ -43,27 +21,18 @@ const run = async () => {
   }
 
   const [repositoryOwner, repositoryName] = githubRepository.split("/")
-  const pullRequestNumber = await readPullRequestNumber({ logger })
+  const pullRequestNumber = readPullRequestNumber()
 
-  return reportLighthouseScoreMergeImpact(
-    async () => {
-      await exec(command)
-      const outFileUrl = resolveUrl(outFilePath, projectDirectoryUrl)
-      const outFileContent = await readFile(outFileUrl)
-      return JSON.parse(outFileContent)
-    },
-    {
-      logLevel,
-      projectDirectoryUrl,
-      githubToken,
-      repositoryOwner,
-      repositoryName,
-      pullRequestNumber,
-    },
-  )
+  return {
+    projectDirectoryUrl: process.env.GITHUB_WORKSPACE,
+    githubToken,
+    repositoryOwner,
+    repositoryName,
+    pullRequestNumber,
+  }
 }
 
-const readPullRequestNumber = async ({ logger }) => {
+const readPullRequestNumber = async () => {
   const githubRef = process.env.GITHUB_REF
   if (!githubRef) {
     throw new Error(`missing process.env.GITHUB_REF`)
@@ -75,16 +44,16 @@ const readPullRequestNumber = async ({ logger }) => {
   // https://github.com/actions/checkout/issues/58#issuecomment-589447479
   const githubEventFilePath = process.env.GITHUB_EVENT_PATH
   if (githubEventFilePath) {
-    logger.warn(`pull request number not found in process.env.GITHUB_REF, trying inside github event file.
+    console.warn(`pull request number not found in process.env.GITHUB_REF, trying inside github event file.
 --- process.env.GITHUB_REF ---
 ${githubRef}
 --- github event file path ---
 ${githubEventFilePath}
 `)
-    const githubEventFileContent = await readFile(githubEventFilePath)
+    const githubEventFileContent = String(readFileSync(githubEventFilePath))
     const githubEvent = JSON.parse(githubEventFileContent)
     const pullRequestNumber = githubEvent.pull_request.number
-    logger.warn(`pull request number found in the file: ${pullRequestNumber}`)
+    console.warn(`pull request number found in the file: ${pullRequestNumber}`)
     if (pullRequestNumber) {
       return pullRequestNumber
     }
@@ -105,5 +74,3 @@ const githubRefToPullRequestNumber = (githubRef) => {
   const pullRequestNumberString = afterPull.slice(0, slashAfterPullIndex)
   return Number(pullRequestNumberString)
 }
-
-export default run()
