@@ -6,12 +6,12 @@ branding:
   color: "orange"
 inputs:
   github-token:
-    description: "The GITHUB_TOKEN secret",
+    description: "The GITHUB_TOKEN secret"
   command:
-    description: "Command to run to generate lighthouse report",
+    description: "Command to run to generate lighthouse report"
     default: "npm run generate-lighthouse-report"
   command-outfile-path:
-    description: "Path to lighthouse report after command",
+    description: "Path to lighthouse report after command"
     default: "./lighthouse/lighthouse-report.json"
   log-level:
     description: "Controls log verbosity during action"
