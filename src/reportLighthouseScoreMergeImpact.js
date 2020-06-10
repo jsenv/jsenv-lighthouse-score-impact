@@ -17,28 +17,37 @@ import {
 } from "./internal/pull-requests.js"
 import { generateCommentBody } from "./internal/generateCommentBody.js"
 
-export const reportLighthouseImpactIntoGithubPullRequest = async (
+export const reportLighthouseScoreMergeImpact = async (
   generateLighthouseReport,
   {
     cancellationToken = createCancellationTokenForProcess(),
     logLevel,
     projectDirectoryUrl,
+    githubToken,
     repositoryOwner,
     repositoryName,
     pullRequestNumber,
-    githubToken,
   },
 ) => {
   return wrapExternalFunction(
     async () => {
-      const logger = createLogger({ logLevel })
       projectDirectoryUrl = assertAndNormalizeDirectoryUrl(projectDirectoryUrl)
-
-      const execCommandInProjectDirectory = (command) => exec(command, { cwd: projectDirectoryUrl })
-
       if (typeof githubToken !== "string") {
         throw new TypeError(`githubToken must be a string but received ${githubToken}`)
       }
+      if (typeof repositoryOwner !== "string") {
+        throw new TypeError(`repositoryOwner must be a string but received ${repositoryOwner}`)
+      }
+      if (typeof repositoryName !== "string") {
+        throw new TypeError(`repositoryName must be a string but received ${repositoryName}`)
+      }
+      pullRequestNumber = String(pullRequestNumber)
+      if (typeof pullRequestNumber !== "string") {
+        throw new TypeError(`pullRequestNumber must be a string but received ${pullRequestNumber}`)
+      }
+
+      const logger = createLogger({ logLevel })
+      const execCommandInProjectDirectory = (command) => exec(command, { cwd: projectDirectoryUrl })
 
       const pullRequest = await getPullRequest(
         { repositoryOwner, repositoryName, pullRequestNumber },
