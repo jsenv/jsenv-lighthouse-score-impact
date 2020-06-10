@@ -29,6 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Report lighthouse impact
-        uses: jsenv/jsenv-lighthouse-score-merge-impact@v1-alpha-2
+        uses: jsenv/jsenv-lighthouse-score-merge-impact@v1-alpha-3
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
