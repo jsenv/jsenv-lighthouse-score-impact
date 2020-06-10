@@ -25,7 +25,7 @@ jobs:
           git init
           git remote add origin $GITHUB_REPOSITORY_URL
       - name: Setup node ${{ matrix.node }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
       - name: Report lighthouse impact
