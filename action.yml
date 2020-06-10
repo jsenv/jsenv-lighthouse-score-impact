@@ -1,12 +1,13 @@
-name: "lighthouse-impact-action"
-description: "Get pull request impact on lighthouse"
+name: "lighthouse-score-merge-impact"
+description: "Get pull request merge impact on lighthouse score"
 author: "Damien Maillard"
 branding:
   icon: "archive"
   color: "orange"
 inputs:
   github-token:
-    description: "The GITHUB_TOKEN secret"
+    description: "Github token used to comment and create gist"
+    required: true
   command:
     description: "Command to run to generate lighthouse report"
     default: "npm run generate-lighthouse-report"
@@ -17,5 +18,5 @@ inputs:
     description: "Controls log verbosity during action"
     default: "warn"
 runs:
-  using: "node14"
+  using: "node13"
   main: "dist/action/action.js"
