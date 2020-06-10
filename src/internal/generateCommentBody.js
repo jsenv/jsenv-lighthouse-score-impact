@@ -1,20 +1,5 @@
 /*
 
-TODO
-
-when generateLighthouse report fails
-(we should try/await/catch it)
-we put a warning at the top of the message filesize impact style
-and eventually the error message and something saying to check logs
-
-But this belongs to the code doing this because we won't produce the gist neither
-
-We should compare baseReport and headReport lighthouse version
-when these version differs we drop the comparison because version differs.
-Here again a warning with both version and explaining we cannot compare
-
-(however we can put the link to both gists)
-
 */
 
 import { formatNumericDiff } from "./formatNumericDiff.js"
