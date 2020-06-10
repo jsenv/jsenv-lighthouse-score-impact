@@ -2,7 +2,6 @@
 /coverage/
 /dist/
 /node_modules/
-/action.yml
 /importMap.json
 /jsconfig.json
 /package-lock.json
