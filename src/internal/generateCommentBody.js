@@ -88,14 +88,11 @@ const scoreToDisplayedScore = (score) => twoDecimalsPrecision(score)
 
 const twoDecimalsPrecision = (floatingNumber) => Math.round(floatingNumber * 100) / 100
 
-const renderCategoryScore = (
-  category,
-  { baseReport, headReport, pullRequestBase, pullRequestHead },
-) => {
+const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase }) => {
   const headerCells = [
-    `<th nowrap>Impact</th>`,
-    `<th nowrap>${pullRequestBase}</th>`,
-    `<th nowrap>${pullRequestHead}</th>`,
+    `<th nowrap>Global score Impact</th>`,
+    `<th nowrap>Global score on ${pullRequestBase}</th>`,
+    `<th nowrap>Global score after merge</th>`,
   ]
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
@@ -130,9 +127,9 @@ const renderCategoryAudits = (
 ) => {
   const impactedAuditsHeaderCells = [
     `<th nowrap>Audit</th>`,
-    `<th nowrap>Impact</th>`,
-    `<th nowrap>${pullRequestBase}</th>`,
-    `<th nowrap>${pullRequestHead}</th>`,
+    `<th nowrap>Score impact</th>`,
+    `<th nowrap>Score on ${pullRequestBase}</th>`,
+    `<th nowrap>Score after merge</th>`,
   ]
   const { auditRefs } = baseReport.categories[category]
 
