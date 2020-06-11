@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import { generateLighthouseReport } from "@jsenv/lighthouse-score-merge-impact"
+import { generateLighthouseReport } from "../../../index.js"
 
 generateLighthouseReport("https://google.com", {
   projectDirectoryUrl: new URL("../../../", import.meta.url),
