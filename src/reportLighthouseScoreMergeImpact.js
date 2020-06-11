@@ -51,7 +51,10 @@ export const reportLighthouseScoreMergeImpact = async (
       }
 
       const logger = createLogger({ logLevel })
-      const execCommandInProjectDirectory = (command) => exec(command, { cwd: projectDirectoryUrl })
+      const execCommandInProjectDirectory = (command) => {
+        logger.debug(`> ${command}`)
+        return exec(command, { cwd: projectDirectoryUrl })
+      }
 
       logger.debug(
         `get pull request ${getPullRequestUrl({
