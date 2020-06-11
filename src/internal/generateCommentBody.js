@@ -137,93 +137,53 @@ const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBas
     const baseAudit = baseReport.audits[auditId]
     const headAudit = headReport.audits[auditId]
 
-    const { scoreDisplayMode } = baseAudit
+    const baseAuditOutput = renderAudit(baseAudit)
+    const headAuditOutput = renderAudit(headAudit)
 
-    // manual checks cannot be compared
-    // and there is definitely no use to display them
-    if (scoreDisplayMode === "manual") {
+    // both are not applicable
+    if (baseAuditOutput === null && headAuditOutput === null) {
       return
     }
 
-    // informative audit will mostly be skipped
-    if (scoreDisplayMode === "informative") {
-      const baseNumericValue = baseAudit.numericValue
-      const baseDisplayValue = baseAudit.displayValue
-      const headNumericValue = headAudit.numericValue
-      const headDisplayValue = headAudit.displayValue
-
-      if (typeof baseDisplayValue !== "undefined") {
-        audits.push([
-          `<td nowrap>${auditId}</td>`,
-          `<td nowrap>${baseDisplayValue === headDisplayValue ? "none" : "---"}</td>`,
-          `<td nowrap>${baseDisplayValue}</td>`,
-          `<td nowrap>${headDisplayValue}</td>`,
-        ])
-        return
-      }
-
-      if (typeof baseNumericValue !== "undefined") {
-        audits.push([
-          `<td nowrap>${auditId}</td>`,
-          `<td nowrap>${formatNumericDiff(headNumericValue - baseNumericValue)}</td>`,
-          `<td nowrap>${baseNumericValue}</td>`,
-          `<td nowrap>${headNumericValue}</td>`,
-        ])
-        return
-      }
-
-      return
-    }
-
-    if (scoreDisplayMode === "binary") {
-      const baseScore = baseAudit.score
-      const headScore = headAudit.score
-
-      if (baseScore === headScore) {
-        audits.push([
-          `<td nowrap>${auditId}</td>`,
-          `<td nowrap>none</td>`,
-          `<td nowrap>${baseScore ? "✔" : "☓"}</td>`,
-          `<td nowrap>${baseScore ? "✔" : "☓"}</td>`,
-        ])
-        return
-      }
+    // becomes applicable
+    if (baseAuditOutput === null && headAuditOutput !== null) {
       audits.push([
         `<td nowrap>${auditId}</td>`,
-        `<td nowrap>✔</td>`,
-        `<td nowrap>☓</td>`,
-        `<td nowrap>✔</td>`,
+        `<td nowrap>---</td>`,
+        `<td nowrap>---</td>`,
+        `<td nowrap>${headAuditOutput}</td>`,
       ])
       return
     }
 
-    if (scoreDisplayMode === "numeric") {
-      const baseScore = baseAudit.score
-      const headScore = headAudit.score
-
-      if (baseScore === headScore) {
-        audits.push([
-          `<td nowrap>${auditId}</td>`,
-          `<td nowrap>none</td>`,
-          `<td nowrap>${baseScore}</td>`,
-          `<td nowrap>${headScore}</td>`,
-        ])
-        return
-      }
+    // becomes unapplicable
+    if (baseAuditOutput !== null && headAuditOutput === null) {
       audits.push([
         `<td nowrap>${auditId}</td>`,
-        `<td nowrap>${formatNumericDiff(headScore - baseScore)}</td>`,
-        `<td nowrap>${baseScore}</td>`,
-        `<td nowrap>${headScore}</td>`,
+        `<td nowrap>---</td>`,
+        `<td nowrap>${baseAuditOutput}</td>`,
+        `<td nowrap>---</td>`,
+      ])
+      return
+    }
+
+    if (typeof baseAuditOutput === "number" && typeof headAuditOutput === "number") {
+      const diff = headAuditOutput - baseAuditOutput
+
+      audits.push([
+        `<td nowrap>${auditId}</td>`,
+        `<td nowrap>${diff === 0 ? "none" : formatNumericDiff(diff)}</td>`,
+        `<td nowrap>${baseAuditOutput}</td>`,
+        `<td nowrap>${headAuditOutput}</td>`,
       ])
       return
     }
 
     audits.push([
       `<td nowrap>${auditId}</td>`,
-      `<td nowrap>---</td>`,
-      `<td nowrap>---</td>`,
-      `<td nowrap>---</td>`,
+      `<td nowrap>${baseAuditOutput === headAuditOutput ? "---" : "none"}</td>`,
+      `<td nowrap>${baseAuditOutput}</td>`,
+      `<td nowrap>${headAuditOutput}</td>`,
     ])
   })
 
@@ -246,6 +206,40 @@ const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBas
       </tr>
     </tbody>
   </table>`
+}
+
+const renderAudit = (audit) => {
+  const { scoreDisplayMode } = audit
+
+  if (scoreDisplayMode === "manual") {
+    return null
+  }
+
+  if (scoreDisplayMode === "notApplicable") {
+    return null
+  }
+
+  if (scoreDisplayMode === "informative") {
+    const { displayValue } = audit
+    if (typeof displayValue !== "undefined") return displayValue
+
+    const { numericValue } = audit
+    if (typeof numericValue !== "undefined") return numericValue
+
+    return null
+  }
+
+  if (scoreDisplayMode === "binary") {
+    const { score } = audit
+    return score ? "✔" : "☓"
+  }
+
+  if (scoreDisplayMode === "numeric") {
+    const { score } = audit
+    return score
+  }
+
+  return null
 }
 
 const renderFooter = ({ baseGist, headGist, pullRequestBase }) => {
