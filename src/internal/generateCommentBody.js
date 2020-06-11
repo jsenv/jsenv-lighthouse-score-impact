@@ -69,10 +69,11 @@ const renderBody = ({ baseReport, headReport, pullRequestBase, pullRequestHead }
 const renderCategory = (category, { baseReport, headReport, pullRequestBase, pullRequestHead }) => {
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
-  const diffScore = formatNumericDiff(headScore - baseScore)
+  const diff = headScore - baseScore
+  const diffDisplayValue = diff ? formatNumericDiff(headScore - baseScore) : "no impact"
 
   return `<details>
-  <summary>${category} (${diffScore})</summary>
+  <summary>${category} (${diffDisplayValue})</summary>
   ${renderCategoryScore(category, { baseReport, headReport, pullRequestBase, pullRequestHead })}
   ${renderCategoryAudits(category, {
     baseReport,
@@ -98,8 +99,10 @@ const renderCategoryScore = (
   ]
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
+  const diff = headScore - baseScore
+  const diffDisplayValue = diff ? formatNumericDiff(headScore - baseScore) : "none"
   const bodyCells = [
-    `<td nowrap>${formatNumericDiff(headScore - baseScore)}</td>`,
+    `<td nowrap>${diffDisplayValue}</td>`,
     `<td nowrap>${baseScore}</td>`,
     `<td nowrap>${headScore}</td>`,
   ]
@@ -133,7 +136,7 @@ const renderCategoryAudits = (
   ]
   const { auditRefs } = baseReport.categories[category]
 
-  const impactedAudits = []
+  const audits = []
 
   auditRefs.forEach((auditRef) => {
     const auditId = auditRef.id
@@ -156,7 +159,7 @@ const renderCategoryAudits = (
       const headDisplayValue = headAudit.displayValue
 
       if (typeof baseNumericValue !== "undefined") {
-        impactedAudits.push([
+        audits.push([
           `<td nowrap>${auditId}</td>`,
           `<td nowrap>${baseNumericValue === headNumericValue ? "none" : "---"}</td>`,
           `<td nowrap>${
@@ -169,7 +172,7 @@ const renderCategoryAudits = (
         return
       }
       if (typeof baseDisplayValue !== "undefined") {
-        impactedAudits.push([
+        audits.push([
           `<td nowrap>${auditId}</td>`,
           `<td nowrap>${baseDisplayValue === headDisplayValue ? "none" : "---"}</td>`,
           `<td nowrap>${baseDisplayValue}</td>`,
@@ -185,7 +188,7 @@ const renderCategoryAudits = (
       const headScore = headAudit.score
 
       if (baseScore === headScore) {
-        impactedAudits.push([
+        audits.push([
           `<td nowrap>${auditId}</td>`,
           `<td nowrap>none</td>`,
           `<td nowrap>${baseScore ? "✔" : "☓"}</td>`,
@@ -193,7 +196,7 @@ const renderCategoryAudits = (
         ])
         return
       }
-      impactedAudits.push([
+      audits.push([
         `<td nowrap>${auditId}</td>`,
         `<td nowrap>✔</td>`,
         `<td nowrap>☓</td>`,
@@ -207,7 +210,7 @@ const renderCategoryAudits = (
       const headScore = headAudit.score
 
       if (baseScore === headScore) {
-        impactedAudits.push([
+        audits.push([
           `<td nowrap>${auditId}</td>`,
           `<td nowrap>none</td>`,
           `<td nowrap>${baseScore}</td>`,
@@ -215,7 +218,7 @@ const renderCategoryAudits = (
         ])
         return
       }
-      impactedAudits.push([
+      audits.push([
         `<td nowrap>${auditId}</td>`,
         `<td nowrap>${formatNumericDiff(headScore - baseScore)}</td>`,
         `<td nowrap>${baseScore}</td>`,
@@ -224,7 +227,7 @@ const renderCategoryAudits = (
       return
     }
 
-    impactedAudits.push([
+    audits.push([
       `<td nowrap>${auditId}</td>`,
       `<td nowrap>---</td>`,
       `<td nowrap>---</td>`,
@@ -241,7 +244,7 @@ const renderCategoryAudits = (
       </tr>
     </thead>
     <tbody>
-      <tr>${impactedAudits.map(
+      <tr>${audits.map(
         (cells) => `
         ${cells.join(`
         `)}`,
