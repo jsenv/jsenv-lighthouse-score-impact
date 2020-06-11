@@ -9,6 +9,8 @@ import {
   createCancellationTokenForProcess,
   assertAndNormalizeDirectoryUrl,
   urlToFileSystemPath,
+  readFile,
+  resolveUrl,
 } from "@jsenv/util"
 import { exec } from "./internal/exec.js"
 import { getGist, postGist, patchGist } from "./internal/gists.js"
@@ -20,19 +22,18 @@ import {
 } from "./internal/pull-requests.js"
 import { GENERATED_BY_COMMENT, generateCommentBody } from "./internal/generateCommentBody.js"
 
-export const reportLighthouseScoreMergeImpact = async (
-  generateLighthouseReport,
-  {
-    cancellationToken = createCancellationTokenForProcess(),
-    logLevel,
-    projectDirectoryUrl,
-    githubToken,
-    repositoryOwner,
-    repositoryName,
-    pullRequestNumber,
-    installCommand = "npm install",
-  },
-) => {
+export const reportLighthouseScoreMergeImpact = async ({
+  cancellationToken = createCancellationTokenForProcess(),
+  logLevel,
+  projectDirectoryUrl,
+  githubToken,
+  repositoryOwner,
+  repositoryName,
+  pullRequestNumber,
+  outfileRelativeUrl = "./lighthouse/lighthouse-report.json",
+  generateCommand = "node ./workflows/lighthouse-impact-generate-lighthouse-report.js",
+  installCommand = "npm install",
+}) => {
   return wrapExternalFunction(
     async () => {
       projectDirectoryUrl = assertAndNormalizeDirectoryUrl(projectDirectoryUrl)
@@ -148,8 +149,8 @@ export const reportLighthouseScoreMergeImpact = async (
         )
         await execCommandInProjectDirectory(`git checkout origin/${pullRequestBase}`)
         await execCommandInProjectDirectory(installCommand)
-
-        baseReport = await generateLighthouseReport()
+        await execCommandInProjectDirectory(generateCommand)
+        baseReport = JSON.parse(await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)))
 
         // generateLighthouseReport might generate files that could conflict when doing the merge
         // reset to avoid potential merge conflicts
@@ -178,8 +179,8 @@ export const reportLighthouseScoreMergeImpact = async (
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${pullRequestHead}`)
         await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
         await execCommandInProjectDirectory(installCommand)
-
-        headReport = await generateLighthouseReport()
+        await execCommandInProjectDirectory(generateCommand)
+        headReport = JSON.parse(await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)))
         logger.debug("report after merge generated")
       } catch (error) {
         logger.error(error.stack)
