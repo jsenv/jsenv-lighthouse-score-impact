@@ -312,10 +312,13 @@ const baseGistIdRegex = new RegExp("<!-- base-gist-id=([a-zA-Z0-9_]+) -->")
 const headGistIdRegex = new RegExp("<!-- head-gist-id=([a-zA-Z0-9_]+) -->")
 
 const commentToGistIds = (comment) => {
-  const baseGistId = comment.body.match(baseGistIdRegex)[1]
-  if (!baseGistId) return null
-  const headGistId = comment.body.match(headGistIdRegex)[1]
-  if (!headGistId) return null
+  const baseGistIdMatch = comment.body.match(baseGistIdRegex)
+  if (!baseGistIdMatch) return null
+  const headGistIdMatch = comment.body.match(headGistIdRegex)
+  if (!headGistIdMatch) return null
+
+  const baseGistId = baseGistIdMatch[1]
+  const headGistId = headGistIdMatch[1]
   return { baseGistId, headGistId }
 }
 
