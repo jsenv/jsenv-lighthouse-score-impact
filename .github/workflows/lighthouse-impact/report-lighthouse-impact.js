@@ -1,5 +1,7 @@
-// import { reportLighthouseScoreMergeImpact, readGithubWorkflowEnv } from "@jsenv/lighthouse-score-merge-impact"
-import { reportLighthouseScoreMergeImpact, readGithubWorkflowEnv } from "../../../index.js"
+import {
+  reportLighthouseScoreMergeImpact,
+  readGithubWorkflowEnv,
+} from "@jsenv/lighthouse-score-merge-impact"
 
 reportLighthouseScoreMergeImpact(
   async () => {
