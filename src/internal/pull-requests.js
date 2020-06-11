@@ -34,11 +34,11 @@ export const postPullRequestComment = (
 export const patchPullRequestComment = (
   commentId,
   commentBody,
-  { repositoryOwner, repositoryName, pullRequestNumber },
+  { repositoryOwner, repositoryName },
   options,
 ) => {
   return patchGithubRessource(
-    `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/issues/${pullRequestNumber}/comments/${commentId}`,
+    `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/issues/comments/${commentId}`,
     { body: commentBody },
     options,
   )
