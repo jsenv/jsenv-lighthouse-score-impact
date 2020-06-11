@@ -45,7 +45,7 @@ export const generateLighthouseReport = async (
         ...(sandbox ? [] : ["--no-sandbox"]),
         ...(ignoreCertificateErrors ? [] : ["-ignore-certificate-errors"]),
         // "--purge_hint_cache_store",
-        // "--incognito",
+        "--incognito",
         "--disk-cache-size=1",
         // "--disk-cache-dir=/dev/null",
       ]
