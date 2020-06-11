@@ -238,30 +238,34 @@ ${gistIdToUrl(headGistId)}`)
         }
 
         if (baseGist) {
-          logger.debug("base gist found, updating it")
+          logger.debug(`updating base gist at ${gistIdToUrl(baseGist.id)}`)
           baseGist = await patchGist(baseGist.id, baseGistData, {
             cancellationToken,
             githubToken,
           })
+          logger.debug(`base gist updated`)
         } else {
-          logger.debug(`base gist not found, creating it`)
+          logger.debug(`creating base gist`)
           baseGist = await postGist(baseGistData, {
             cancellationToken,
             githubToken,
           })
+          logger.debug(`base gist created at ${gistIdToUrl(headGist.id)}`)
         }
         if (headGist) {
-          logger.debug("head gist found, updating it")
+          logger.debug(`updating head gist at ${gistIdToUrl(headGist.id)}`)
           headGist = await patchGist(headGist.id, headGistData, {
             cancellationToken,
             githubToken,
           })
+          logger.debug(`head gist updated`)
         } else {
-          logger.debug(`head gist not found, creating it`)
+          logger.debug(`creating head gist`)
           headGist = await postGist(headGistData, {
             cancellationToken,
             githubToken,
           })
+          logger.debug(`head gist created at ${gistIdToUrl(headGist.id)}`)
         }
 
         return {
