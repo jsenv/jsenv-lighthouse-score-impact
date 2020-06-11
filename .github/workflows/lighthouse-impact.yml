@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: npm install
-        run: npm install
+        run: cd ./.github/workflows/lighthouse-impact && npm install
       - name: Report lighthouse impact
         run: node ./.github/workflows/lighthouse-impact/report-lighthouse-impact.js
         env:
