@@ -278,7 +278,7 @@ ${existingComment.body}`)
         baseGist = gists.baseGist
         headGist = gists.headGist
       } catch (e) {
-        if (e.responseStatus === 401) {
+        if (e.responseStatus === 403) {
           headerMessages.push(
             `**Warning:** Link to lighthouse reports cannot be generated because github token is not allowed to create gists.`,
           )
