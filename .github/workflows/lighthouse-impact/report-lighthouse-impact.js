@@ -1,8 +1,4 @@
-import {
-  reportLighthouseScoreMergeImpact,
-  readGithubWorkflowEnv,
-  // eslint-disable-next-line import/no-unresolved
-} from "@jsenv/lighthouse-score-merge-impact"
+import { reportLighthouseScoreMergeImpact, readGithubWorkflowEnv } from "../../../index.js"
 
 reportLighthouseScoreMergeImpact({
   ...readGithubWorkflowEnv(),
