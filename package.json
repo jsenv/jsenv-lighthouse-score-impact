@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jsenv/jsenv-github-pull-request-lighthouse-impact"
+    "url": "https://github.com/jsenv/jsenv-lighthouse-score-merge-impact"
   },
   "publishConfig": {
     "access": "public",
