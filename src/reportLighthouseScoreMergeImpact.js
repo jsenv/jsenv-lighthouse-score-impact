@@ -1,5 +1,7 @@
 /* eslint-disable import/max-dependencies */
 
+// https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token
+
 import { createOperation } from "@jsenv/cancellation"
 import { createLogger } from "@jsenv/logger"
 import {
@@ -51,9 +53,16 @@ export const reportLighthouseScoreMergeImpact = async (
       const logger = createLogger({ logLevel })
       const execCommandInProjectDirectory = (command) => exec(command, { cwd: projectDirectoryUrl })
 
+      logger.debug(
+        `get pull request ${getPullRequestUrl({
+          repositoryOwner,
+          repositoryName,
+          pullRequestNumber,
+        })}`,
+      )
       const pullRequest = await getPullRequest(
         { repositoryOwner, repositoryName, pullRequestNumber },
-        { cancellationToken },
+        { cancellationToken, githubToken },
       )
       // here we could detect fork and so on
       const pullRequestBase = pullRequest.base.ref

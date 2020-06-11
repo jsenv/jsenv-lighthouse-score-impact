@@ -32,7 +32,7 @@ export const readGithubWorkflowEnv = () => {
   }
 }
 
-const readPullRequestNumber = async () => {
+const readPullRequestNumber = () => {
   const githubRef = process.env.GITHUB_REF
   if (!githubRef) {
     throw new Error(`missing process.env.GITHUB_REF`)
