@@ -181,7 +181,7 @@ const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBas
 
     audits.push([
       `<td nowrap>${auditId}</td>`,
-      `<td nowrap>${baseAuditOutput === headAuditOutput ? "---" : "none"}</td>`,
+      `<td nowrap>${baseAuditOutput === headAuditOutput ? "none" : "---"}</td>`,
       `<td nowrap>${baseAuditOutput}</td>`,
       `<td nowrap>${headAuditOutput}</td>`,
     ])
