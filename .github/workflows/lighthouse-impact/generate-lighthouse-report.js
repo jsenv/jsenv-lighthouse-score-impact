@@ -2,6 +2,5 @@ import { generateLighthouseReport } from "../../../src/generateLighthouseReport.
 
 export default generateLighthouseReport("http://google.com", {
   projectDirectoryUrl: new URL("../../../", import.meta.url),
-  sandbox: true,
   logLevel: "debug",
 })

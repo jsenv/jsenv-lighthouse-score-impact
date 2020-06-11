@@ -44,6 +44,10 @@ export const generateLighthouseReport = async (
         ...(gpu ? [] : ["--disable-gpu"]),
         ...(sandbox ? [] : ["--no-sandbox"]),
         ...(ignoreCertificateErrors ? [] : ["-ignore-certificate-errors"]),
+        // "--purge_hint_cache_store",
+        // "--incognito",
+        "--disk-cache-size=1",
+        // "--disk-cache-dir=/dev/null",
       ]
       const chrome = await createOperation({
         cancellationToken,
