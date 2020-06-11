@@ -116,6 +116,7 @@ export const reportLighthouseScoreMergeImpact = async (
               pullRequestNumber,
             },
             {
+              cancellationToken,
               githubToken,
             },
           )
@@ -132,6 +133,7 @@ export const reportLighthouseScoreMergeImpact = async (
             pullRequestNumber,
           },
           {
+            cancellationToken,
             githubToken,
           },
         )
