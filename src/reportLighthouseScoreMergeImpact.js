@@ -225,14 +225,14 @@ ${gistIdToUrl(headGistId)}`)
         const baseGistData = {
           files: {
             [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-base-lighthouse-report.json`]: {
-              content: JSON.stringify(baseReport),
+              content: JSON.stringify(baseReport, null, "  "),
             },
           },
         }
         const headGistData = {
           files: {
             [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-merged-lighthouse-report.json`]: {
-              content: JSON.stringify(headReport),
+              content: JSON.stringify(headReport, null, "  "),
             },
           },
         }
