@@ -19,7 +19,11 @@ jobs:
       CI: true
     steps:
       - name: Setup git
-        uses: actions/checkout@v2
+        env:
+          GITHUB_REPOSITORY_URL: ${{ github.repositoryUrl }}
+        run: |
+          git init
+          git remote add origin $GITHUB_REPOSITORY_URL
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v1
         with:
