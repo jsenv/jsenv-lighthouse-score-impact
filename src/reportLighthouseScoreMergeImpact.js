@@ -120,7 +120,7 @@ export const reportLighthouseScoreMergeImpact = async (
               githubToken,
             },
           )
-          logger.log("comment updated")
+          logger.debug("comment updated")
           return comment
         }
 
