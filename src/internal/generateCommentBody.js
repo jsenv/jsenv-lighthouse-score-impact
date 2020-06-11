@@ -158,19 +158,6 @@ const renderCategoryAudits = (
       const headNumericValue = headAudit.numericValue
       const headDisplayValue = headAudit.displayValue
 
-      if (typeof baseNumericValue !== "undefined") {
-        audits.push([
-          `<td nowrap>${auditId}</td>`,
-          `<td nowrap>${baseNumericValue === headNumericValue ? "none" : "---"}</td>`,
-          `<td nowrap>${
-            typeof baseDisplayValue === "undefined" ? baseNumericValue : baseDisplayValue
-          }</td>`,
-          `<td nowrap>${
-            typeof headDisplayValue === "undefined" ? headNumericValue : headDisplayValue
-          }</td>`,
-        ])
-        return
-      }
       if (typeof baseDisplayValue !== "undefined") {
         audits.push([
           `<td nowrap>${auditId}</td>`,
@@ -180,6 +167,17 @@ const renderCategoryAudits = (
         ])
         return
       }
+
+      if (typeof baseNumericValue !== "undefined") {
+        audits.push([
+          `<td nowrap>${auditId}</td>`,
+          `<td nowrap>${formatNumericDiff(headNumericValue - baseNumericValue)}</td>`,
+          `<td nowrap>${baseNumericValue}</td>`,
+          `<td nowrap>${headNumericValue}</td>`,
+        ])
+        return
+      }
+
       return
     }
 
