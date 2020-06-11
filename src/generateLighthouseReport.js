@@ -25,7 +25,7 @@ export const generateLighthouseReport = async (
     projectDirectoryUrl,
     headless = true,
     gpu = false,
-    sandbox = true,
+    sandbox = false,
     ignoreCertificateErrors = false,
     config = null,
     jsonFile = Boolean(projectDirectoryUrl),
@@ -47,7 +47,7 @@ export const generateLighthouseReport = async (
         // "--purge_hint_cache_store",
         // "--incognito",
         "--disk-cache-size=1",
-        "--disk-cache-dir=/dev/null",
+        // "--disk-cache-dir=/dev/null",
       ]
       const chrome = await createOperation({
         cancellationToken,
