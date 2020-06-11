@@ -31,7 +31,7 @@ export const reportLighthouseScoreMergeImpact = async ({
   repositoryName,
   pullRequestNumber,
   outfileRelativeUrl = "./lighthouse/lighthouse-report.json",
-  generateCommand = "node ./workflows/lighthouse-impact-generate-lighthouse-report.js",
+  generateCommand = "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
   installCommand = "npm install",
 }) => {
   return wrapExternalFunction(
