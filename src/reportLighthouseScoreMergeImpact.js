@@ -250,7 +250,7 @@ ${gistIdToUrl(headGistId)}`)
             cancellationToken,
             githubToken,
           })
-          logger.debug(`base gist created at ${gistIdToUrl(headGist.id)}`)
+          logger.debug(`base gist created at ${gistIdToUrl(baseGist.id)}`)
         }
         if (headGist) {
           logger.debug(`updating head gist at ${gistIdToUrl(headGist.id)}`)
