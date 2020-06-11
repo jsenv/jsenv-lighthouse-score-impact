@@ -90,9 +90,9 @@ const twoDecimalsPrecision = (floatingNumber) => Math.round(floatingNumber * 100
 
 const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase }) => {
   const headerCells = [
-    `<th nowrap>Global score Impact</th>`,
-    `<th nowrap>Global score on ${pullRequestBase}</th>`,
-    `<th nowrap>Global score after merge</th>`,
+    `<th nowrap>Impact</th>`,
+    `<th nowrap>${pullRequestBase}</th>`,
+    `<th nowrap>after merge</th>`,
   ]
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
@@ -104,7 +104,7 @@ const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase
     `<td nowrap>${headScore}</td>`,
   ]
 
-  return `<h3>Global impact on ${category}</h3>
+  return `<h3>Global impact on ${category} score</h3>
   <table>
     <thead>
       <tr>
@@ -121,15 +121,12 @@ const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase
   </table>`
 }
 
-const renderCategoryAudits = (
-  category,
-  { baseReport, headReport, pullRequestBase, pullRequestHead },
-) => {
+const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBase }) => {
   const impactedAuditsHeaderCells = [
-    `<th nowrap>Audit</th>`,
-    `<th nowrap>Score impact</th>`,
-    `<th nowrap>Score on ${pullRequestBase}</th>`,
-    `<th nowrap>Score after merge</th>`,
+    `<th nowrap>${category} audit</th>`,
+    `<th nowrap>impact</th>`,
+    `<th nowrap>${pullRequestBase}</th>`,
+    `<th nowrap>after merge</th>`,
   ]
   const { auditRefs } = baseReport.categories[category]
 
@@ -230,7 +227,7 @@ const renderCategoryAudits = (
     ])
   })
 
-  return `<h3>Detailed impact on ${category}</h3>
+  return `<h3>Detailed impact on ${category} score</h3>
   <table>
     <thead>
       <tr>
