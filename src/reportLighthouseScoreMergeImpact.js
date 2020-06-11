@@ -8,6 +8,7 @@ import {
   wrapExternalFunction,
   createCancellationTokenForProcess,
   assertAndNormalizeDirectoryUrl,
+  urlToFileSystemPath,
 } from "@jsenv/util"
 import { exec } from "./internal/exec.js"
 import { getGist, postGist, patchGist } from "./internal/gists.js"
@@ -54,7 +55,9 @@ export const reportLighthouseScoreMergeImpact = async (
       logger.debug(`projectDirectoryUrl: ${projectDirectoryUrl}`)
       const execCommandInProjectDirectory = (command) => {
         logger.debug(`> ${command}`)
-        return exec(command, { cwd: projectDirectoryUrl })
+        return exec(command, {
+          cwd: urlToFileSystemPath(projectDirectoryUrl),
+        })
       }
 
       logger.debug(
