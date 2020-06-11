@@ -213,9 +213,7 @@ ${gistIdToUrl(baseGistId)}
 --- gist for head lighthouse report ---
 ${gistIdToUrl(headGistId)}`)
           } else {
-            logger.debug(`cannot find gist id in comment body
---- comment body ---
-${existingComment.body}`)
+            logger.debug(`cannot find gist id in comment body`)
           }
         }
 
