@@ -50,7 +50,7 @@
     "lighthouse": "6.0.0"
   },
   "devDependencies": {
-    "@jsenv/assert": "2.2.0",
+    "@jsenv/assert": "2.2.1",
     "@jsenv/codecov-upload": "3.4.1",
     "@jsenv/core": "13.3.2",
     "@jsenv/eslint-config": "12.4.1",
