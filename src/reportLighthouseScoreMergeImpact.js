@@ -30,7 +30,7 @@ export const reportLighthouseScoreMergeImpact = async (
     repositoryOwner,
     repositoryName,
     pullRequestNumber,
-    installCommand,
+    installCommand = "npm install",
   },
 ) => {
   return wrapExternalFunction(
@@ -49,6 +49,9 @@ export const reportLighthouseScoreMergeImpact = async (
       pullRequestNumber = String(pullRequestNumber)
       if (typeof pullRequestNumber !== "string") {
         throw new TypeError(`pullRequestNumber must be a string but received ${pullRequestNumber}`)
+      }
+      if (typeof installCommand !== "string") {
+        throw new TypeError(`installCommand must be a string but received ${installCommand}`)
       }
 
       const logger = createLogger({ logLevel })
