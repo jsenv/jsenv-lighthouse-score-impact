@@ -4,9 +4,7 @@ export const getGithubRessource = async (url, { githubToken, cancellationToken }
   return sendHttpRequest(url, {
     cancellationToken,
     method: "GET",
-    headers: {
-      authorization: `token ${githubToken}`,
-    },
+    headers: tokenToHeaders(githubToken),
     responseStatusMap: {
       200: async (response) => {
         const json = await response.json()
@@ -18,15 +16,11 @@ export const getGithubRessource = async (url, { githubToken, cancellationToken }
 }
 
 export const postGithubRessource = (url, body, { cancellationToken, githubToken } = {}) => {
-  const bodyAsString = JSON.stringify(body)
   return sendHttpRequest(url, {
     cancellationToken,
     method: "POST",
-    headers: {
-      "authorization": `token ${githubToken}`,
-      "content-length": Buffer.byteLength(bodyAsString),
-    },
-    body: bodyAsString,
+    headers: tokenToHeaders(githubToken),
+    body: JSON.stringify(body),
     responseStatusMap: {
       201: async (response) => {
         const json = await response.json()
@@ -37,15 +31,11 @@ export const postGithubRessource = (url, body, { cancellationToken, githubToken 
 }
 
 export const patchGithubRessource = async (url, body, { cancellationToken, githubToken } = {}) => {
-  const bodyAsString = JSON.stringify(body)
   return sendHttpRequest(url, {
     cancellationToken,
     method: "PATCH",
-    headers: {
-      "authorization": `token ${githubToken}`,
-      "content-length": Buffer.byteLength(bodyAsString),
-    },
-    body: bodyAsString,
+    headers: tokenToHeaders(githubToken),
+    body: JSON.stringify(body),
     responseStatusMap: {
       200: async (response) => {
         const json = await response.json()
@@ -53,6 +43,15 @@ export const patchGithubRessource = async (url, body, { cancellationToken, githu
       },
     },
   })
+}
+
+const tokenToHeaders = (token) => {
+  if (!token) {
+    throw new Error(`missing token, request will not be authorized.`)
+  }
+  return {
+    authorization: `token ${token}`,
+  }
 }
 
 const sendHttpRequest = async (
@@ -64,7 +63,10 @@ const sendHttpRequest = async (
     response = await fetchUrl(url, {
       cancellationToken,
       method,
-      headers,
+      headers: {
+        ...(typeof body === "undefined" ? {} : { "content-length": Buffer.byteLength(body) }),
+        ...headers,
+      },
       body,
     })
   } catch (error) {
@@ -84,10 +86,10 @@ ${error.stack}`)
 
   const responseBodyAsJson = await response.json()
   const error = new Error(`unexpected response status.
---- expected response status ---
-${Object.keys(responseStatusMap).join(", ")}
 --- response status ---
 ${response.status}
+--- expected response status ---
+${Object.keys(responseStatusMap).join(", ")}
 --- request method ---
 ${method}
 --- request url ---
