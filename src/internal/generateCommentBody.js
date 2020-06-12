@@ -67,16 +67,16 @@ const renderBody = ({ baseReport, headReport, pullRequestBase, pullRequestHead }
 }
 
 const renderCategory = (category, { baseReport, headReport, pullRequestBase, pullRequestHead }) => {
-  const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
-  const headScore = scoreToDisplayedScore(headReport.categories[category].score)
-  const diff = headScore - baseScore
-  const diffDisplayValue = diff ? formatNumericDiff(headScore - baseScore) : "no impact"
+  const baseDisplayedScore = scoreToDisplayedScore(baseReport.categories[category].score)
+  const headDisplayedScore = scoreToDisplayedScore(headReport.categories[category].score)
+  const diff = headDisplayedScore - baseDisplayedScore
+  const diffDisplayValue = diff === 0 ? "no impact" : formatNumericDiff(diff)
 
   return `<details>
   <summary>${category} (${diffDisplayValue})</summary>
   ${
     category === "performance"
-      ? `<blockquote>Keep in mind performance score variation may be caused by factors unrelated to the pull request changes. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>`
+      ? `<br /><blockquote>Keep in mind performance score variation may be caused external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>`
       : ""
   }
   ${renderCategoryScore(category, { baseReport, headReport, pullRequestBase, pullRequestHead })}
@@ -89,15 +89,13 @@ const renderCategory = (category, { baseReport, headReport, pullRequestBase, pul
 </details>`
 }
 
-const scoreToDisplayedScore = (score) => twoDecimalsPrecision(score)
-
-const twoDecimalsPrecision = (floatingNumber) => Math.round(floatingNumber * 100) / 100
+const scoreToDisplayedScore = (floatingNumber) => Math.round(floatingNumber * 100)
 
 const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase }) => {
-  const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
-  const headScore = scoreToDisplayedScore(headReport.categories[category].score)
-  const diff = headScore - baseScore
-  const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(headScore - baseScore)
+  const baseDisplayedScore = scoreToDisplayedScore(baseReport.categories[category].score)
+  const headDisplayedScore = scoreToDisplayedScore(headReport.categories[category].score)
+  const diff = headDisplayedScore - baseDisplayedScore
+  const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(diff)
 
   return `<h3>Global impact on ${category} score</h3>
   <table>
@@ -111,8 +109,8 @@ const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase
     <tbody>
       <tr>
         <td nowrap>${diffDisplayValue}</td>
-        <td nowrap>${baseScore}</td>
-        <td nowrap>${headScore}</td>
+        <td nowrap>${baseDisplayedScore}</td>
+        <td nowrap>${headDisplayedScore}</td>
       </tr>
     </tbody>
   </table>`
