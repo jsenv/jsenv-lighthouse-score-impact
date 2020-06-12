@@ -58,7 +58,7 @@ export const reportLighthouseScoreMergeImpact = async ({
       const logger = createLogger({ logLevel })
       logger.debug(`projectDirectoryUrl: ${projectDirectoryUrl}`)
       const execCommandInProjectDirectory = (command) => {
-        logger.debug(`> ${command}`)
+        logger.info(`> ${command}`)
         return exec(command, {
           cwd: urlToFileSystemPath(projectDirectoryUrl),
         })
@@ -107,7 +107,7 @@ export const reportLighthouseScoreMergeImpact = async ({
 
       const patchOrPostComment = async (commentBody) => {
         if (existingComment) {
-          logger.debug(`updating comment at ${commentToUrl(existingComment)}`)
+          logger.info(`updating comment at ${commentToUrl(existingComment)}`)
           const comment = await patchPullRequestComment(
             existingComment.id,
             commentBody,
@@ -121,11 +121,11 @@ export const reportLighthouseScoreMergeImpact = async ({
               githubToken,
             },
           )
-          logger.debug("comment updated")
+          logger.info("comment updated")
           return comment
         }
 
-        logger.debug(`creating comment`)
+        logger.info(`creating comment`)
         const comment = await postPullRequestComment(
           commentBody,
           {
@@ -138,7 +138,7 @@ export const reportLighthouseScoreMergeImpact = async ({
             githubToken,
           },
         )
-        logger.debug(`comment created at ${commentToUrl(comment)}`)
+        logger.info(`comment created at ${commentToUrl(comment)}`)
         return comment
       }
 
@@ -241,34 +241,34 @@ ${gistIdToUrl(afterMergeGistId)}`)
         }
 
         if (baseGist) {
-          logger.debug(`updating base gist at ${gistIdToUrl(baseGist.id)}`)
+          logger.info(`updating base gist at ${gistIdToUrl(baseGist.id)}`)
           baseGist = await patchGist(baseGist.id, baseGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`base gist updated`)
+          logger.info(`base gist updated`)
         } else {
-          logger.debug(`creating base gist`)
+          logger.info(`creating base gist`)
           baseGist = await postGist(baseGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`base gist created at ${gistIdToUrl(baseGist.id)}`)
+          logger.info(`base gist created at ${gistIdToUrl(baseGist.id)}`)
         }
         if (afterMergeGist) {
-          logger.debug(`updating after merge gist at ${gistIdToUrl(afterMergeGist.id)}`)
+          logger.info(`updating after merge gist at ${gistIdToUrl(afterMergeGist.id)}`)
           afterMergeGist = await patchGist(afterMergeGist.id, afterMergeGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`after merge gist updated`)
+          logger.info(`after merge gist updated`)
         } else {
-          logger.debug(`creating after merge gist`)
+          logger.info(`creating after merge gist`)
           afterMergeGist = await postGist(afterMergeGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`after merge gist created at ${gistIdToUrl(afterMergeGist.id)}`)
+          logger.info(`after merge gist created at ${gistIdToUrl(afterMergeGist.id)}`)
         }
 
         return {
