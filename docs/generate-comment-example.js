@@ -8,7 +8,7 @@ https://github.com/actions/toolkit/tree/master/packages/core
 import { writeFile, resolveUrl } from "@jsenv/util"
 import { generateCommentBody } from "../src/internal/generateCommentBody.js"
 import baseReport from "./report.base.json"
-import headReport from "./report.head.json"
+import afterMergeReport from "./report.head.json"
 
 const examples = {
   basic: generateCommentBody({
@@ -33,7 +33,7 @@ const examples = {
         },
       },
     },
-    headReport: {
+    afterMergeReport: {
       audits: {
         whatever: {
           score: 0.7,
@@ -52,7 +52,7 @@ const examples = {
       },
     },
     baseGist: { id: "base" },
-    headGist: { id: "head" },
+    afterMergeGist: { id: "head" },
     pullRequestBase: "base",
     pullRequestHead: "head",
   }),
@@ -60,19 +60,19 @@ const examples = {
     baseReport: {
       lighthouseVersion: "1.0.0",
     },
-    headReport: {
+    afterMergeReport: {
       lighthouseVersion: "1.0.1",
     },
     baseGist: { id: "base" },
-    headGist: { id: "head" },
+    afterMergeGist: { id: "head" },
     pullRequestBase: "base",
     pullRequestHead: "head",
   }),
   real: generateCommentBody({
     baseReport,
-    headReport,
+    afterMergeReport,
     baseGist: { id: "base" },
-    headGist: { id: "head" },
+    afterMergeGist: { id: "head" },
     pullRequestBase: "base",
     pullRequestHead: "head",
   }),
