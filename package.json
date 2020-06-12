@@ -1,6 +1,6 @@
 {
   "name": "@jsenv/lighthouse-score-merge-impact",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-beta",
   "license": "MIT",
   "repository": {
     "type": "git",
