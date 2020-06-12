@@ -174,13 +174,15 @@ export const reportLighthouseScoreMergeImpact = async ({
         return { error, comment }
       }
 
-      let headReport
+      let afterMergeReport
       try {
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${pullRequestHead}`)
         await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(generateCommand)
-        headReport = JSON.parse(await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)))
+        afterMergeReport = JSON.parse(
+          await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)),
+        )
         logger.debug("report after merge generated")
       } catch (error) {
         logger.error(error.stack)
@@ -201,27 +203,27 @@ export const reportLighthouseScoreMergeImpact = async ({
 
       const patchOrPostGists = async () => {
         let baseGistId
-        let headGistId
+        let afterMergeGistId
 
         if (existingComment) {
           const gistIds = commentToGistIds(existingComment)
           if (gistIds) {
             baseGistId = gistIds.baseGistId
-            headGistId = gistIds.headGistId
+            afterMergeGistId = gistIds.afterMergeGistId
             logger.debug(`gists found in comment body
 --- gist for base lighthouse report ---
 ${gistIdToUrl(baseGistId)}
---- gist for head lighthouse report ---
-${gistIdToUrl(headGistId)}`)
+--- gist for after merge lighthouse report ---
+${gistIdToUrl(afterMergeGistId)}`)
           } else {
             logger.debug(`cannot find gist id in comment body`)
           }
         }
 
         logger.debug(`update or create both gists.`)
-        let [baseGist, headGist] = await Promise.all([
+        let [baseGist, afterMergeGist] = await Promise.all([
           baseGistId ? getGist(baseGistId, { cancellationToken, githubToken }) : null,
-          headGistId ? getGist(headGistId, { cancellationToken, githubToken }) : null,
+          afterMergeGistId ? getGist(afterMergeGistId, { cancellationToken, githubToken }) : null,
         ])
         const baseGistData = {
           files: {
@@ -230,10 +232,10 @@ ${gistIdToUrl(headGistId)}`)
             },
           },
         }
-        const headGistData = {
+        const afterMergeGistData = {
           files: {
-            [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-merged-lighthouse-report.json`]: {
-              content: JSON.stringify(headReport, null, "  "),
+            [`${repositoryOwner}-${repositoryName}-pr-${pullRequestNumber}-after-merge-lighthouse-report.json`]: {
+              content: JSON.stringify(afterMergeReport, null, "  "),
             },
           },
         }
@@ -253,35 +255,35 @@ ${gistIdToUrl(headGistId)}`)
           })
           logger.debug(`base gist created at ${gistIdToUrl(baseGist.id)}`)
         }
-        if (headGist) {
-          logger.debug(`updating head gist at ${gistIdToUrl(headGist.id)}`)
-          headGist = await patchGist(headGist.id, headGistData, {
+        if (afterMergeGist) {
+          logger.debug(`updating after merge gist at ${gistIdToUrl(afterMergeGist.id)}`)
+          afterMergeGist = await patchGist(afterMergeGist.id, afterMergeGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`head gist updated`)
+          logger.debug(`after merge gist updated`)
         } else {
-          logger.debug(`creating head gist`)
-          headGist = await postGist(headGistData, {
+          logger.debug(`creating after merge gist`)
+          afterMergeGist = await postGist(afterMergeGistData, {
             cancellationToken,
             githubToken,
           })
-          logger.debug(`head gist created at ${gistIdToUrl(headGist.id)}`)
+          logger.debug(`after merge gist created at ${gistIdToUrl(afterMergeGist.id)}`)
         }
 
         return {
           baseGist,
-          headGist,
+          afterMergeGist,
         }
       }
 
       let baseGist
-      let headGist
+      let afterMergeGist
       const headerMessages = []
       try {
         const gists = await patchOrPostGists()
         baseGist = gists.baseGist
-        headGist = gists.headGist
+        afterMergeGist = gists.afterMergeGist
       } catch (e) {
         if (e.responseStatus === 403) {
           headerMessages.push(
@@ -295,9 +297,9 @@ ${gistIdToUrl(headGistId)}`)
         generateCommentBody({
           headerMessages,
           baseReport,
-          headReport,
           baseGist,
-          headGist,
+          afterMergeReport,
+          afterMergeGist,
           pullRequestBase,
           pullRequestHead,
         }),
@@ -305,7 +307,7 @@ ${gistIdToUrl(headGistId)}`)
 
       return {
         baseGist,
-        headGist,
+        afterMergeGist,
         comment,
       }
     },
@@ -314,17 +316,17 @@ ${gistIdToUrl(headGistId)}`)
 }
 
 const baseGistIdRegex = new RegExp("<!-- base-gist-id=([a-zA-Z0-9_]+) -->")
-const headGistIdRegex = new RegExp("<!-- head-gist-id=([a-zA-Z0-9_]+) -->")
+const afterMergeGistIdRegex = new RegExp("<!-- after-merge-gist-id=([a-zA-Z0-9_]+) -->")
 
 const commentToGistIds = (comment) => {
   const baseGistIdMatch = comment.body.match(baseGistIdRegex)
   if (!baseGistIdMatch) return null
-  const headGistIdMatch = comment.body.match(headGistIdRegex)
-  if (!headGistIdMatch) return null
+  const afterMergeGistIdMatch = comment.body.match(afterMergeGistIdRegex)
+  if (!afterMergeGistIdMatch) return null
 
   const baseGistId = baseGistIdMatch[1]
-  const headGistId = headGistIdMatch[1]
-  return { baseGistId, headGistId }
+  const afterMergeGistId = afterMergeGistIdMatch[1]
+  return { baseGistId, afterMergeGistId }
 }
 
 const commentToUrl = (comment) => {
