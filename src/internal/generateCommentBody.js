@@ -74,6 +74,11 @@ const renderCategory = (category, { baseReport, headReport, pullRequestBase, pul
 
   return `<details>
   <summary>${category} (${diffDisplayValue})</summary>
+  ${
+    category === "performance"
+      ? `<blockquote>Keep in mind performance score variation may be caused by factors unrelated to the pull request changes. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>`
+      : ""
+  }
   ${renderCategoryScore(category, { baseReport, headReport, pullRequestBase, pullRequestHead })}
   ${renderCategoryAudits(category, {
     baseReport,
@@ -89,54 +94,37 @@ const scoreToDisplayedScore = (score) => twoDecimalsPrecision(score)
 const twoDecimalsPrecision = (floatingNumber) => Math.round(floatingNumber * 100) / 100
 
 const renderCategoryScore = (category, { baseReport, headReport, pullRequestBase }) => {
-  const headerCells = [
-    `<th nowrap>Impact</th>`,
-    `<th nowrap>${pullRequestBase}</th>`,
-    `<th nowrap>after merge</th>`,
-  ]
   const baseScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const headScore = scoreToDisplayedScore(headReport.categories[category].score)
   const diff = headScore - baseScore
-  const diffDisplayValue = diff ? formatNumericDiff(headScore - baseScore) : "none"
-  const bodyCells = [
-    `<td nowrap>${diffDisplayValue}</td>`,
-    `<td nowrap>${baseScore}</td>`,
-    `<td nowrap>${headScore}</td>`,
-  ]
+  const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(headScore - baseScore)
 
   return `<h3>Global impact on ${category} score</h3>
   <table>
     <thead>
       <tr>
-        ${headerCells.join(`
-        `)}
+        <th nowrap>Impact</th>
+        <th nowrap>${pullRequestBase}</th>
+        <th nowrap>after merge</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        ${bodyCells.join(`
-        `)}
+        <td nowrap>${diffDisplayValue}</td>
+        <td nowrap>${baseScore}</td>
+        <td nowrap>${headScore}</td>
       </tr>
     </tbody>
   </table>`
 }
 
 const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBase }) => {
-  const impactedAuditsHeaderCells = [
-    `<th nowrap>${category} audit</th>`,
-    `<th nowrap>impact</th>`,
-    `<th nowrap>${pullRequestBase}</th>`,
-    `<th nowrap>after merge</th>`,
-  ]
   const { auditRefs } = baseReport.categories[category]
-
   const audits = []
-
   auditRefs.forEach((auditRef) => {
     const auditId = auditRef.id
     const baseAudit = baseReport.audits[auditId]
     const headAudit = headReport.audits[auditId]
-
     const baseAuditOutput = renderAudit(baseAudit)
     const headAuditOutput = renderAudit(headAudit)
 
@@ -191,8 +179,10 @@ const renderCategoryAudits = (category, { baseReport, headReport, pullRequestBas
   <table>
     <thead>
       <tr>
-        ${impactedAuditsHeaderCells.join(`
-        `)}
+        <th nowrap>${category} audit</th>
+        <th nowrap>impact</th>
+        <th nowrap>${pullRequestBase}</th>
+        <th nowrap>after merge</th>
       </tr>
     </thead>
     <tbody>
@@ -236,7 +226,7 @@ const renderAudit = (audit) => {
 
   if (scoreDisplayMode === "numeric") {
     const { score } = audit
-    return score
+    return score * 100
   }
 
   return null
