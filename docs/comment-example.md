@@ -91,7 +91,7 @@
 
 <details>
   <summary>performance (no impact)</summary>
-  <br /><blockquote>Keep in mind performance score variation may be caused external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>
+  <br /><blockquote>Keep in mind performance score variation may be caused by external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>
   <h3>Global impact on performance score</h3>
   <table>
     <thead>
