@@ -30,8 +30,8 @@ export const reportLighthouseScoreMergeImpact = async ({
   repositoryOwner,
   repositoryName,
   pullRequestNumber,
-  outfileRelativeUrl = "./lighthouse/lighthouse-report.json",
-  generateCommand = "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
+  jsonFileGenerateCommand = "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
+  jsonFileRelativeUrl = "./lighthouse/lighthouse-report.json",
   installCommand = "npm install",
 }) => {
   return wrapExternalFunction(
@@ -149,8 +149,10 @@ export const reportLighthouseScoreMergeImpact = async ({
         )
         await execCommandInProjectDirectory(`git checkout origin/${pullRequestBase}`)
         await execCommandInProjectDirectory(installCommand)
-        await execCommandInProjectDirectory(generateCommand)
-        baseReport = JSON.parse(await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)))
+        await execCommandInProjectDirectory(jsonFileGenerateCommand)
+        baseReport = JSON.parse(
+          await readFile(resolveUrl(jsonFileRelativeUrl, projectDirectoryUrl)),
+        )
 
         // generateLighthouseReport might generate files that could conflict when doing the merge
         // reset to avoid potential merge conflicts
@@ -179,9 +181,9 @@ export const reportLighthouseScoreMergeImpact = async ({
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${pullRequestHead}`)
         await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
         await execCommandInProjectDirectory(installCommand)
-        await execCommandInProjectDirectory(generateCommand)
+        await execCommandInProjectDirectory(jsonFileGenerateCommand)
         afterMergeReport = JSON.parse(
-          await readFile(resolveUrl(outfileRelativeUrl, projectDirectoryUrl)),
+          await readFile(resolveUrl(jsonFileRelativeUrl, projectDirectoryUrl)),
         )
         logger.debug("report after merge generated")
       } catch (error) {
