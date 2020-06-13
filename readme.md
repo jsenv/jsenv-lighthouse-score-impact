@@ -119,7 +119,7 @@ jobs:
 
 When outside a github workflow you must provide `{ projectDirectoryUrl, githubToken, repositoryOwner, repositoryName, pullRequestNumber }` "manually" to `reportLighthouseScoreMergeImpact`.
 
-For tavis it would be something as below.
+For Travis it would be something as below.
 
 ```js
 import { reportLighthouseScoreMergeImpact } from "@jsenv/lighthouse-score-merge-impact"
