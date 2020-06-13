@@ -43,9 +43,9 @@ In order to analyse the impact of a pull request on lighthouse score this projec
 You need:
 
 - [@jsenv/lighthouse-score-merge-impact in devDependencies](#Installation-with-npm)
-- [A file generating a lighthouse report](#lighthouse/generate-lighthouse-report.js)
-- [The file runned against a pull request](#lighthouse/report-lighthouse-impact.js)
-- [A workflow.yml](#.github/workflows/lighthouse-impact.yml)
+- [A file generating a lighthouse report](#lighthousegenerate-lighthouse-reportjs)
+- [The file runned against a pull request](#lighthousereport-lighthouse-impactjs)
+- [A workflow.yml](#githubworkflowslighthouse-impactyml)
 
 ## Installation with npm
 
