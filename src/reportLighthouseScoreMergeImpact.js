@@ -195,7 +195,9 @@ export const reportLighthouseScoreMergeImpact = async ({
       let afterMergeReport
       try {
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${headRef}`)
-        await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
+        await execCommandInProjectDirectory(`git merge FETCH_HEAD --allow-unrelated-histories`)
+        // --allow-unrelated-histories in case of forked pr
+        // https://github.com/git/git/blob/master/Documentation/RelNotes/2.9.0.txt#L58-L68
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
         afterMergeReport = JSON.parse(
