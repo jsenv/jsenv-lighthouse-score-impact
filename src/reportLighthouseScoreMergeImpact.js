@@ -75,7 +75,6 @@ export const reportLighthouseScoreMergeImpact = async ({
         { repositoryOwner, repositoryName, pullRequestNumber },
         { cancellationToken, githubToken },
       )
-      // here we could detect fork and so on
       const pullRequestBase = pullRequest.base.ref
       const pullRequestHead = pullRequest.head.ref
 
@@ -92,7 +91,7 @@ export const reportLighthouseScoreMergeImpact = async ({
           )
         }
         // https://github.community/t/checkout-a-branch-from-a-fork/276/2
-        headRef = `refs/pull/${pullRequestNumber}/head`
+        headRef = `refs/pull/${pullRequestNumber}/merge`
       }
 
       logger.debug(
@@ -195,7 +194,7 @@ export const reportLighthouseScoreMergeImpact = async ({
       let afterMergeReport
       try {
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${headRef}`)
-        await execCommandInProjectDirectory(`git merge FETCH_HEAD --allow-unrelated-histories`)
+        await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
         // --allow-unrelated-histories in case of forked pr
         // https://github.com/git/git/blob/master/Documentation/RelNotes/2.9.0.txt#L58-L68
         await execCommandInProjectDirectory(installCommand)
