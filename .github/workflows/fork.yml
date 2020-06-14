@@ -1,0 +1,25 @@
+name: lighthouse-impact
+
+on: pull_request
+
+jobs:
+  fork-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [13.12.0]
+    runs-on: ${{ matrix.os }}
+    name: fork test
+    steps:
+      - name: Setup git
+        uses: actions/checkout@v2
+      - name: Setup node ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: npm install
+        run: npm install
+      - name: Test fork
+        run: node ./.github/workflows/test-fork.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
