@@ -1,4 +1,4 @@
-name: lighthouse-impact
+name: test-fork
 
 on: pull_request
 
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: npm install
-        run: npm install
+        run: npm install --ignore-scripts
       - name: Test fork
         run: node ./.github/workflows/test-fork.js
         env:
