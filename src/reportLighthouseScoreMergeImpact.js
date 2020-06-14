@@ -194,9 +194,21 @@ export const reportLighthouseScoreMergeImpact = async ({
       let afterMergeReport
       try {
         await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${headRef}`)
+        /*
+        When this is running in a pull request opened from a fork
+        the following happens:
+        - it works as expected
+        - git throw an error: Refusing to merge unrelated histories.
+        git merge accepts an --allow-unrelated-histories flag.
+        https://github.com/git/git/blob/master/Documentation/RelNotes/2.9.0.txt#L58-L68
+        But when using it git complains that it does not know who we are
+        and asks for git config email.
+
+        For now this work with fork but sometimes it does not.
+        If one day fork becomes supported by github action or someone is running
+        this code against forks from an other CI this needs to be fixed
+        */
         await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
-        // --allow-unrelated-histories in case of forked pr
-        // https://github.com/git/git/blob/master/Documentation/RelNotes/2.9.0.txt#L58-L68
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
         afterMergeReport = JSON.parse(
