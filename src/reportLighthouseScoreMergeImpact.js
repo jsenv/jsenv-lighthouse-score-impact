@@ -92,7 +92,7 @@ export const reportLighthouseScoreMergeImpact = async ({
           )
         }
         // https://github.community/t/checkout-a-branch-from-a-fork/276/2
-        headRef = `refs/pull/${pullRequestNumber}/merge`
+        headRef = `refs/pull/${pullRequestNumber}/head`
       }
 
       logger.debug(
