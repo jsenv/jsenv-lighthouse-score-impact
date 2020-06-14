@@ -109,7 +109,7 @@ const renderCategoryScore = (category, { baseReport, afterMergeReport, pullReque
   const diff = afterMergeDisplayedScore - baseDisplayedScore
   const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(diff)
 
-  return `<h3>Global impact on ${category} score</h3>
+  return `<h3>Overall impact on ${category} score</h3>
   <table>
     <thead>
       <tr>
