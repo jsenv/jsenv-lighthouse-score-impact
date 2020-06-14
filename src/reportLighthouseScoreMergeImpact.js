@@ -79,6 +79,22 @@ export const reportLighthouseScoreMergeImpact = async ({
       const pullRequestBase = pullRequest.base.ref
       const pullRequestHead = pullRequest.head.ref
 
+      let headRef
+      if (pullRequest.base.repo.full_name === pullRequest.head.repo.full_name) {
+        headRef = pullRequestHead
+      } else {
+        const isInsideGithubWorkflow = Boolean(process.env.GITHUB_EVENT_NAME)
+        if (isInsideGithubWorkflow) {
+          // warn about
+          // https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token#permissions-for-the-github_token
+          logger.warn(
+            `pull request comes from a fork, github token is likely going to be unauthorized to post comment`,
+          )
+        }
+        // https://github.community/t/checkout-a-branch-from-a-fork/276/2
+        headRef = `refs/pull/${pullRequestNumber}/merge`
+      }
+
       logger.debug(
         `searching lighthouse comment in pull request ${getPullRequestUrl({
           repositoryOwner,
@@ -178,7 +194,7 @@ export const reportLighthouseScoreMergeImpact = async ({
 
       let afterMergeReport
       try {
-        await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${pullRequestHead}`)
+        await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${headRef}`)
         await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
