@@ -109,7 +109,7 @@ const renderCategoryScore = (category, { baseReport, afterMergeReport, pullReque
   const diff = afterMergeDisplayedScore - baseDisplayedScore
   const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(diff)
 
-  return `<h3>Overall impact on ${category} score</h3>
+  return `<h4>Overall impact on ${category} score</h4>
   <table>
     <thead>
       <tr>
@@ -185,7 +185,7 @@ const renderCategoryAudits = (category, { baseReport, afterMergeReport, pullRequ
     ])
   })
 
-  return `<h3>Detailed impact on ${category} score</h3>
+  return `<h4>Detailed impact on ${category} score</h4>
   <table>
     <thead>
       <tr>

@@ -9,7 +9,7 @@
 <details>
   <summary>perf (+10)</summary>
   
-  <h3>Overall impact on perf score</h3>
+  <h4>Overall impact on perf score</h4>
   <table>
     <thead>
       <tr>
@@ -26,7 +26,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on perf score</h3>
+  <h4>Detailed impact on perf score</h4>
   <table>
     <thead>
       <tr>
@@ -92,7 +92,7 @@
 <details>
   <summary>performance (no impact)</summary>
   <br /><blockquote>Keep in mind performance score variation may be caused by external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>
-  <h3>Overall impact on performance score</h3>
+  <h4>Overall impact on performance score</h4>
   <table>
     <thead>
       <tr>
@@ -109,7 +109,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on performance score</h3>
+  <h4>Detailed impact on performance score</h4>
   <table>
     <thead>
       <tr>
@@ -337,7 +337,7 @@
 <details>
   <summary>accessibility (no impact)</summary>
   
-  <h3>Overall impact on accessibility score</h3>
+  <h4>Overall impact on accessibility score</h4>
   <table>
     <thead>
       <tr>
@@ -354,7 +354,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on accessibility score</h3>
+  <h4>Detailed impact on accessibility score</h4>
   <table>
     <thead>
       <tr>
@@ -396,7 +396,7 @@
 <details>
   <summary>best-practices (no impact)</summary>
   
-  <h3>Overall impact on best-practices score</h3>
+  <h4>Overall impact on best-practices score</h4>
   <table>
     <thead>
       <tr>
@@ -413,7 +413,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on best-practices score</h3>
+  <h4>Detailed impact on best-practices score</h4>
   <table>
     <thead>
       <tr>
@@ -521,7 +521,7 @@
 <details>
   <summary>seo (no impact)</summary>
   
-  <h3>Overall impact on seo score</h3>
+  <h4>Overall impact on seo score</h4>
   <table>
     <thead>
       <tr>
@@ -538,7 +538,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on seo score</h3>
+  <h4>Detailed impact on seo score</h4>
   <table>
     <thead>
       <tr>
@@ -616,7 +616,7 @@
 <details>
   <summary>pwa (no impact)</summary>
   
-  <h3>Overall impact on pwa score</h3>
+  <h4>Overall impact on pwa score</h4>
   <table>
     <thead>
       <tr>
@@ -633,7 +633,7 @@
       </tr>
     </tbody>
   </table>
-  <h3>Detailed impact on pwa score</h3>
+  <h4>Detailed impact on pwa score</h4>
   <table>
     <thead>
       <tr>
