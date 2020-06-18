@@ -1,5 +1,3 @@
-/.github/workflows/**/node_modules/
-/.github/workflows/**/package-lock.json
 /.jsenv/
 /.vscode/settings.json
 /coverage/
