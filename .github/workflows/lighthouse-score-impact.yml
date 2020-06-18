@@ -1,9 +1,9 @@
-name: lighthouse-impact
+name: lighthouse-score-impact
 
 on: pull_request
 
 jobs:
-  lighthouse-impact:
+  lighthouse-score-impact:
     # Do not run this workflow on forks because they are not authorized to post comments, see links below:
     # https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token#permissions-for-the-github_token
     # https://github.community/t5/GitHub-Actions/Token-permissions-for-forks-once-again/td-p/33839
@@ -14,7 +14,7 @@ jobs:
         os: [ubuntu-latest]
         node: [13.12.0]
     runs-on: ${{ matrix.os }}
-    name: lighthouse impact
+    name: report lighthouse score impact
     env:
       CI: true
     steps:
@@ -28,9 +28,7 @@ jobs:
       # to use it
       - name: npm install
         run: npm install
-      - name: npm install lighthouse impact
-        run: cd ./.github/workflows/lighthouse-impact && npm install
       - name: Report lighthouse impact
-        run: node ./.github/workflows/lighthouse-impact/report-lighthouse-impact.js
+        run: node ./lighthouse/report-lighthouse-score-impact.js
         env:
           GITHUB_TOKEN: ${{ secrets.LIGHTHOUSE_GITHUB_TOKEN }}

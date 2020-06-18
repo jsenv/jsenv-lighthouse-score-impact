@@ -1,11 +1,8 @@
-/.github/workflows/**/node_modules/
-/.github/workflows/**/package-lock.json
 /.jsenv/
 /.vscode/settings.json
 /coverage/
 /dist/commonjs/
 /dist/**/manifest.json
-/lighthouse/
 /node_modules/
 /test/**/temp/
 /importMap.json

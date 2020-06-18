@@ -22,7 +22,7 @@ import {
 } from "./internal/pull-requests.js"
 import { GENERATED_BY_COMMENT, generateCommentBody } from "./internal/generateCommentBody.js"
 
-export const reportLighthouseScoreMergeImpact = async ({
+export const reportLighthouseScoreImpact = async ({
   cancellationToken = createCancellationTokenForProcess(),
   logLevel,
   projectDirectoryUrl,
@@ -30,7 +30,7 @@ export const reportLighthouseScoreMergeImpact = async ({
   repositoryOwner,
   repositoryName,
   pullRequestNumber,
-  jsonFileGenerateCommand = "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
+  jsonFileGenerateCommand = "node ./.github/workflows/lighthouse-score-impact/generate-lighthouse-report.js",
   jsonFileRelativeUrl = "./lighthouse/lighthouse-report.json",
   installCommand = "npm install",
 }) => {
@@ -105,7 +105,7 @@ export const reportLighthouseScoreMergeImpact = async ({
         cancellationToken,
         start: () =>
           getPullRequestCommentMatching(
-            ({ body }) => body.startsWith(GENERATED_BY_COMMENT),
+            ({ body }) => body.includes(GENERATED_BY_COMMENT),
             {
               repositoryOwner,
               repositoryName,
@@ -177,8 +177,7 @@ export const reportLighthouseScoreMergeImpact = async ({
       } catch (error) {
         logger.error(error.stack)
         const comment = await patchOrPostComment(`${GENERATED_BY_COMMENT}
-
-<h2>Lighthouse merge impact</h2>
+<h2>Lighthouse impact</h2>
 
 ---
 
@@ -218,8 +217,7 @@ export const reportLighthouseScoreMergeImpact = async ({
       } catch (error) {
         logger.error(error.stack)
         const comment = await patchOrPostComment(`${GENERATED_BY_COMMENT}
-
-<h2>Lighthouse merge impact</h2>
+<h2>Lighthouse impact</h2>
 
 ---
 
