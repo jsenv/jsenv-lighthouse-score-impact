@@ -24,8 +24,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      # this is specific to this repo to avoid having to publish package on npm
-      # to use it
       - name: npm install
         run: npm install
       - name: Report lighthouse impact

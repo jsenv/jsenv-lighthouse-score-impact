@@ -28,7 +28,7 @@ export const generateCommentBody = ({
   return `${GENERATED_BY_COMMENT}
 ${baseGist ? `<!-- base-gist-id=${baseGist.id} -->` : ``}
 ${afterMergeGist ? `<!-- after-merge-gist-id=${afterMergeGist.id} -->` : ``}
-<h3>Lighthouse score merge impact</h3>
+<h4>Lighthouse score impact</h4>
 
 ${renderHeader(headerMessages)}
 ${
@@ -109,7 +109,7 @@ const renderCategoryScore = (category, { baseReport, afterMergeReport, pullReque
   const diff = afterMergeDisplayedScore - baseDisplayedScore
   const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(diff)
 
-  return `<h4>Overall impact on ${category} score</h4>
+  return `<h5>Overall impact on ${category} score</h5>
   <table>
     <thead>
       <tr>
@@ -185,7 +185,7 @@ const renderCategoryAudits = (category, { baseReport, afterMergeReport, pullRequ
     ])
   })
 
-  return `<h4>Detailed impact on ${category} score</h4>
+  return `<h5>Detailed impact on ${category} score</h5>
   <table>
     <thead>
       <tr>
