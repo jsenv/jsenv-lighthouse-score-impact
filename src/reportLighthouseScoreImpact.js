@@ -105,7 +105,7 @@ export const reportLighthouseScoreImpact = async ({
         cancellationToken,
         start: () =>
           getPullRequestCommentMatching(
-            ({ body }) => body.startsWith(GENERATED_BY_COMMENT),
+            ({ body }) => body.includes(GENERATED_BY_COMMENT),
             {
               repositoryOwner,
               repositoryName,
