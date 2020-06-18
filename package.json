@@ -1,10 +1,10 @@
 {
-  "name": "@jsenv/lighthouse-score-merge-impact",
-  "version": "1.0.3",
+  "name": "@jsenv/lighthouse-score-impact",
+  "version": "2.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jsenv/jsenv-lighthouse-score-merge-impact"
+    "url": "https://github.com/jsenv/jsenv-lighthouse-score-impact"
   },
   "publishConfig": {
     "access": "public",

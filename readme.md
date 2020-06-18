@@ -1,11 +1,11 @@
-# lighthouse-score-merge-impact
+# lighthouse-score-impact
 
-Get pull request merge impact on lighthouse score
+Add lighthouse score impact into pull requests.
 
-[![github package](https://img.shields.io/github/package-json/v/jsenv/jsenv-lighthouse-score-merge-impact.svg?label=package&logo=github)](https://github.com/jsenv/jsenv-lighthouse-score-merge-impact/packages)
-[![npm package](https://img.shields.io/npm/v/@jsenv/lighthouse-score-merge-impact.svg?logo=npm&label=package)](https://www.npmjs.com/package/@jsenv/lighthouse-score-merge-impact)
-[![workflow status](https://github.com/jsenv/jsenv-lighthouse-score-merge-impact/workflows/ci/badge.svg)](https://github.com/jsenv/jsenv-lighthouse-score-merge-impact/actions?workflow=ci)
-[![codecov](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-merge-impact/branch/master/graph/badge.svg)](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-merge-impact)
+[![github package](https://img.shields.io/github/package-json/v/jsenv/jsenv-lighthouse-score-impact.svg?label=package&logo=github)](https://github.com/jsenv/jsenv-lighthouse-score-impact/packages)
+[![npm package](https://img.shields.io/npm/v/@jsenv/lighthouse-score-impact.svg?logo=npm&label=package)](https://www.npmjs.com/package/@jsenv/lighthouse-score-impact)
+[![workflow status](https://github.com/jsenv/jsenv-lighthouse-score-impact/workflows/ci/badge.svg)](https://github.com/jsenv/jsenv-lighthouse-score-impact/actions?workflow=ci)
+[![codecov](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-impact/branch/master/graph/badge.svg)](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-impact)
 
 # Table of contents
 
@@ -17,7 +17,7 @@ Get pull request merge impact on lighthouse score
 
 # Presentation
 
-`@jsenv/lighthouse-score-merge-impact` analyses a pull request impact on lighthouse score. This analysis is posted in a comment of the pull request.
+`@jsenv/lighthouse-score-impact` analyses a pull request impact on lighthouse score. This analysis is posted in a comment of the pull request.
 
 The screenshot below shows that comment posted in a pull request.
 
@@ -42,22 +42,22 @@ In order to analyse the impact of a pull request on lighthouse score this projec
 
 You need:
 
-- [@jsenv/lighthouse-score-merge-impact in devDependencies](#Installation-with-npm)
+- [@jsenv/lighthouse-score-impact in devDependencies](#Installation-with-npm)
 - [A file generating a lighthouse report](#lighthousegenerate-lighthouse-reportjs)
-- [The file runned against a pull request](#lighthousereport-lighthouse-impactjs)
-- [A workflow.yml](#githubworkflowslighthouse-impactyml)
+- [The file runned against a pull request](#lighthousereport-lighthouse-score-impactjs)
+- [A workflow.yml](#githubworkflowslighthouse-score-impactyml)
 
 ## Installation with npm
 
 ```console
-npm install --save-dev @jsenv/lighthouse-score-merge-impact
+npm install --save-dev @jsenv/lighthouse-score-impact
 ```
 
 ## lighthouse/generate-lighthouse-report.js
 
 ```js
 import { createServer } from "http"
-import { generateLighthouseReport } from "@jsenv/lighthouse-score-merge-impact"
+import { generateLighthouseReport } from "@jsenv/lighthouse-score-impact"
 
 const server = createServer((request, response) => {
   response.writeHead(200)
@@ -71,30 +71,27 @@ generateLighthouseReport("http://127.0.0.1:8080", {
 })
 ```
 
-## lighthouse/report-lighthouse-impact.js
+## lighthouse/report-lighthouse-score-impact.js
 
 ```js
-import {
-  reportLighthouseScoreMergeImpact,
-  readGithubWorkflowEnv,
-} from "@jsenv/lighthouse-score-merge-impact"
+import { reportLighthouseScoreImpact, readGithubWorkflowEnv } from "@jsenv/lighthouse-score-impact"
 
-reportLighthouseScoreMergeImpact({
+reportLighthouseScoreImpact({
   ...readGithubWorkflowEnv(),
   jsonFileGenerateCommand: "node ./lighthouse/generate-lighthouse-report.js",
   jsonFileRelativeUrl: "./lighthouse/report.json",
 })
 ```
 
-## .github/workflows/lighthouse-impact.yml
+## .github/workflows/lighthouse-score-impact.yml
 
 ```yml
-name: lighthouse-impact
+name: lighthouse-score-impact
 
 on: pull_request
 
 jobs:
-  lighthouse-impact:
+  lighthouse-score-impact:
     # Skip workflow for forks because secrets.GITHUB_TOKEN not allowed to post comments
     if: github.event.pull_request.base.repo.full_name == github.event.pull_request.head.repo.full_name
     strategy:
@@ -110,21 +107,21 @@ jobs:
           node-version: ${{ matrix.node }}
         run: npm install
       - name: Report lighthouse impact
-        run: node ./.github/workflows/lighthouse-impact/report-lighthouse-impact.js
+        run: node ./lighthouse/report-lighthouse-score-impact.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 # Usage outside github workflow
 
-When outside a github workflow you must provide `{ projectDirectoryUrl, githubToken, repositoryOwner, repositoryName, pullRequestNumber }` "manually" to `reportLighthouseScoreMergeImpact`.
+When outside a github workflow you must provide `{ projectDirectoryUrl, githubToken, repositoryOwner, repositoryName, pullRequestNumber }` "manually" to `reportLighthouseScoreImpact`.
 
 For Travis it would be something as below.
 
 ```js
-import { reportLighthouseScoreMergeImpact } from "@jsenv/lighthouse-score-merge-impact"
+import { reportLighthouseScoreImpact } from "@jsenv/lighthouse-score-impact"
 
-reportLighthouseScoreMergeImpact({
+reportLighthouseScoreImpact({
   projectDirectoryUrl: process.env.TRAVIS_BUILD_DIR,
   githubToken: process.env.GITHUB_TOKEN, // make it available somehow
   repositoryOwner: process.env.TRAVIS_REPO_SLUG.split("/")[0],
@@ -136,7 +133,7 @@ reportLighthouseScoreMergeImpact({
 })
 ```
 
-Please note `reportLighthouseScoreMergeImpact` must be called in a state where your git repository has been cloned and you are currently on the pull request branch. Inside github workflow this is done by the following lines in `lighthouse-impact.yml`.
+Please note `reportLighthouseScoreImpact` must be called in a state where your git repository has been cloned and you are currently on the pull request branch. Inside github workflow this is done by the following lines in `lighthouse-score-impact.yml`.
 
 ```yml
 uses: actions/checkout@v2
@@ -160,7 +157,7 @@ npm install
 
 The pull request comment can contain links to see lighthouse reports in [Lighthouse Report Viewer](https://googlechrome.github.io/lighthouse/viewer).
 
-Every github workflow has access to a magic token `secrets.GITHUB_TOKEN`. But this token is not allowed to create gists. We need to update `./.github/workflows/lighthouse-impact.yml` to use an other token that will have the rights to create gists.
+Every github workflow has access to a magic token `secrets.GITHUB_TOKEN`. But this token is not allowed to create gists. We need to update `./.github/workflows/lighthouse-score-impact.yml` to use an other token that will have the rights to create gists.
 
 ```diff
 - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

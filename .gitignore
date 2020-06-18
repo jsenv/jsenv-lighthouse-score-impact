@@ -5,7 +5,6 @@
 /coverage/
 /dist/commonjs/
 /dist/**/manifest.json
-/lighthouse/
 /node_modules/
 /test/**/temp/
 /importMap.json
