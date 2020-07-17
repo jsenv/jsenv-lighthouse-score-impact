@@ -1,6 +1,6 @@
 {
   "name": "@jsenv/lighthouse-score-impact",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,31 +35,31 @@
     "generate-comment-example": "node --no-warnings --experimental-json-modules ./docs/generate-comment-example.js",
     "generate-commonjs-bundle": "node ./script/generate-commonjs-bundle/generate-commonjs-bundle.js",
     "generate-import-map": "node ./script/generate-import-map/generate-import-map.js",
-    "generate-lighthouse-report": "node ./.github/workflows/lighthouse-impact/generate-lighthouse-report.js",
+    "generate-lighthouse-report": "node ./script/generate-lighthouse-report/generate-lighthouse-report.js",
     "dist": "npm run generate-commonjs-bundle",
     "postinstall": "npm run generate-import-map",
     "prepublishOnly": "node ./script/transform-package/remove-postinstall.js && npm run dist",
     "postpublish": "node ./script/transform-package/restore-postinstall.js"
   },
   "dependencies": {
-    "@jsenv/cancellation": "1.4.1",
+    "@jsenv/cancellation": "1.4.2",
     "@jsenv/logger": "3.3.1",
-    "@jsenv/server": "2.6.0",
-    "@jsenv/util": "3.6.0",
-    "chrome-launcher": "0.13.3",
-    "lighthouse": "6.0.0"
+    "@jsenv/server": "3.0.0",
+    "@jsenv/util": "3.6.3",
+    "chrome-launcher": "0.13.4",
+    "lighthouse": "6.1.1"
   },
   "devDependencies": {
     "@jsenv/assert": "2.2.1",
     "@jsenv/codecov-upload": "3.4.1",
-    "@jsenv/core": "13.3.3",
-    "@jsenv/eslint-config": "12.4.1",
+    "@jsenv/core": "14.0.0-alpha.13",
+    "@jsenv/eslint-config": "12.5.0",
     "@jsenv/github-release-package": "1.2.2",
-    "@jsenv/node-module-import-map": "11.1.1",
+    "@jsenv/node-module-import-map": "12.0.1",
     "@jsenv/package-publish": "1.5.1",
     "@jsenv/prettier-check-project": "5.6.0",
     "babel-eslint": "11.0.0-beta.0",
-    "eslint": "7.2.0",
+    "eslint": "7.4.0",
     "prettier": "2.0.5"
   }
 }

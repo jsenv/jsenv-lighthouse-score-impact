@@ -23,12 +23,19 @@ export const readGithubWorkflowEnv = () => {
   const [repositoryOwner, repositoryName] = githubRepository.split("/")
   const pullRequestNumber = readPullRequestNumber()
 
+  const runId = process.env.GITHUB_RUN_ID
+  const runLink = {
+    url: `https://github.com/${repositoryOwner}/${repositoryName}/actions/runs/${runId}`,
+    text: `${runId}`,
+  }
+
   return {
     projectDirectoryUrl: process.env.GITHUB_WORKSPACE,
     githubToken,
     repositoryOwner,
     repositoryName,
     pullRequestNumber,
+    runLink,
   }
 }
 
