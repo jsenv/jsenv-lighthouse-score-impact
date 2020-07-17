@@ -239,6 +239,10 @@ const renderAudit = (audit) => {
     return scoreToDisplayedScore(score)
   }
 
+  if (scoreDisplayMode === "error") {
+    return "error"
+  }
+
   return null
 }
 
