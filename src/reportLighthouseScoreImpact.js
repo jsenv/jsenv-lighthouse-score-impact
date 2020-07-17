@@ -33,6 +33,7 @@ export const reportLighthouseScoreImpact = async ({
   jsonFileGenerateCommand = "node ./.github/workflows/lighthouse-score-impact/generate-lighthouse-report.js",
   jsonFileRelativeUrl = "./lighthouse/lighthouse-report.json",
   installCommand = "npm install",
+  runLink,
 }) => {
   return wrapExternalFunction(
     async () => {
@@ -331,6 +332,7 @@ ${gistIdToUrl(afterMergeGistId)}`)
           afterMergeGist,
           pullRequestBase,
           pullRequestHead,
+          runLink,
         }),
       )
 
