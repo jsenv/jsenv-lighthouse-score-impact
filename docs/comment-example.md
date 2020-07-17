@@ -55,7 +55,6 @@
 <sub>
   Impact analyzed comparing <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=base">base report</a> and <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=head">report after merge</a>
 </sub>
-<br />
 
 # versionMismatch
 
@@ -73,7 +72,6 @@
 <sub>
   Impact analyzed comparing <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=base">base report</a> and <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=head">report after merge</a>
 </sub>
-<br />
 
 # real
 
@@ -722,4 +720,3 @@
 <sub>
   Impact analyzed comparing <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=base">base report</a> and <a href="https://googlechrome.github.io/lighthouse/viewer/?gist=head">report after merge</a>
 </sub>
-<br />
