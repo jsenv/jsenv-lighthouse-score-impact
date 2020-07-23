@@ -157,7 +157,7 @@ npm install
 
 The pull request comment can contain links to see lighthouse reports in [Lighthouse Report Viewer](https://googlechrome.github.io/lighthouse/viewer).
 
-Every github workflow has access to a magic token `secrets.GITHUB_TOKEN`. But this token is not allowed to create gists. We need to update `./.github/workflows/lighthouse-score-impact.yml` to use an other token that will have the rights to create gists.
+To unlock this you need a github token with the right to create gists. Every github workflow has access to a magic token `secrets.GITHUB_TOKEN`. But this token is not allowed to create gists. We need to update `./.github/workflows/lighthouse-score-impact.yml` to use an other token that will have the rights to create gists.
 
 ```diff
 - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
