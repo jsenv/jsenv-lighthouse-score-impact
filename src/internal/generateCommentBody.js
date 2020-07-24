@@ -25,6 +25,23 @@ export const generateCommentBody = ({
     )
   }
 
+  const baseWarnings = baseReport.runWarnings
+  if (baseWarnings && baseWarnings.length) {
+    headerMessages.push(
+      `**Warning**: warnings produced while generating lighthouse report on \`${pullRequestBase}\`:
+- ${baseWarnings.join(`
+- `)}`,
+    )
+  }
+  const afterMergeWarnings = afterMergeReport.runWarnings
+  if (afterMergeWarnings && afterMergeWarnings.length) {
+    headerMessages.push(
+      `**Warning**: warnings produced while generating lighthouse report after merge:
+- ${afterMergeWarnings.join(`
+- `)}`,
+    )
+  }
+
   return `${GENERATED_BY_COMMENT}
 ${baseGist ? `<!-- base-gist-id=${baseGist.id} -->` : ``}
 ${afterMergeGist ? `<!-- after-merge-gist-id=${afterMergeGist.id} -->` : ``}

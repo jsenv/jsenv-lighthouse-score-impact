@@ -7,8 +7,7 @@ https://github.com/actions/toolkit/tree/master/packages/core
 
 import { writeFile, resolveUrl } from "@jsenv/util"
 import { generateCommentBody } from "../src/internal/generateCommentBody.js"
-import baseReport from "./report.base.json"
-import afterMergeReport from "./report.after-merge.json"
+import normalReport from "./lighthouse-report-examples/normal.json"
 
 const examples = {
   basic: generateCommentBody({
@@ -69,8 +68,8 @@ const examples = {
     pullRequestHead: "head",
   }),
   real: generateCommentBody({
-    baseReport,
-    afterMergeReport,
+    baseReport: normalReport,
+    afterMergeReport: normalReport,
     baseGist: { id: "base" },
     afterMergeGist: { id: "head" },
     pullRequestBase: "base",

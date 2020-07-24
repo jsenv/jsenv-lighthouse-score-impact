@@ -68,6 +68,13 @@ export const generateLighthouseReport = async (
       await chrome.kill()
       const { lhr } = results
 
+      const { runTimeError } = lhr
+      if (runTimeError) {
+        const error = new Error(runTimeError.message)
+        Object.assign(error, runTimeError)
+        throw error
+      }
+
       const promises = []
       if (jsonFile) {
         promises.push(
