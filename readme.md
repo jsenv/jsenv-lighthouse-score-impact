@@ -53,7 +53,7 @@ You need:
 npm install --save-dev @jsenv/lighthouse-score-impact
 ```
 
-## lighthouse/generate-lighthouse-report.js
+## generate-lighthouse-report.js
 
 ```js
 import { createServer } from "http"
@@ -78,32 +78,32 @@ const server = createServer((request, response) => {
 server.listen(8080)
 
 generateLighthouseReport("http://127.0.0.1:8080", {
-  projectDirectoryUrl: new URL("../", import.meta.url),
+  projectDirectoryUrl: new URL("./", import.meta.url),
   jsonFileRelativeUrl: "./lighthouse/report.json",
 })
 ```
 
-## lighthouse/report-lighthouse-score-impact.js
+## report-lighthouse-impact.js
 
 ```js
 import { reportLighthouseScoreImpact, readGithubWorkflowEnv } from "@jsenv/lighthouse-score-impact"
 
 reportLighthouseScoreImpact({
   ...readGithubWorkflowEnv(),
-  jsonFileGenerateCommand: "node ./lighthouse/generate-lighthouse-report.js",
-  jsonFileRelativeUrl: "./lighthouse/report.json",
+  jsonFileGenerateCommand: "node ./generate-lighthouse-report.js",
+  jsonFileRelativeUrl: "./lighthouse-report.json",
 })
 ```
 
-## .github/workflows/lighthouse-score-impact.yml
+## .github/workflows/lighthouse-impact.yml
 
 ```yml
-name: lighthouse-score-impact
+name: lighthouse-impact
 
 on: pull_request_target
 
 jobs:
-  lighthouse-score-impact:
+  lighthouse-impact:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -117,7 +117,7 @@ jobs:
           node-version: ${{ matrix.node }}
         run: npm install
       - name: Report lighthouse impact
-        run: node ./lighthouse/report-lighthouse-score-impact.js
+        run: node ./report-lighthouse-impact.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
