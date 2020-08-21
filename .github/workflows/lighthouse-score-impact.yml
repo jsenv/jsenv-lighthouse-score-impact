@@ -1,18 +1,13 @@
 name: lighthouse-impact
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   lighthouse-impact:
-    # Do not run this workflow on forks because they are not authorized to post comments, see links below:
-    # https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token#permissions-for-the-github_token
-    # https://github.community/t5/GitHub-Actions/Token-permissions-for-forks-once-again/td-p/33839
-    # https://github.com/WordPress/gutenberg/issues/17324
-    if: github.event.pull_request.base.repo.full_name == github.event.pull_request.head.repo.full_name
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [13.12.0]
+        node: [14.5.0]
     runs-on: ${{ matrix.os }}
     name: lighthouse impact
     env:

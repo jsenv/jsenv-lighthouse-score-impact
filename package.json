@@ -1,6 +1,6 @@
 {
   "name": "@jsenv/lighthouse-score-impact",
-  "version": "2.3.2",
+  "version": "2.4.0-alpha",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -47,19 +47,19 @@
     "@jsenv/server": "3.0.0",
     "@jsenv/util": "3.6.3",
     "chrome-launcher": "0.13.4",
-    "lighthouse": "6.1.1"
+    "lighthouse": "6.2.0"
   },
   "devDependencies": {
     "@jsenv/assert": "2.2.1",
-    "@jsenv/codecov-upload": "3.4.1",
-    "@jsenv/core": "14.0.0-alpha.13",
+    "@jsenv/codecov-upload": "3.4.2",
+    "@jsenv/core": "14.2.1",
     "@jsenv/eslint-config": "12.5.0",
     "@jsenv/github-release-package": "1.2.2",
     "@jsenv/node-module-import-map": "12.0.1",
     "@jsenv/package-publish": "1.5.1",
-    "@jsenv/prettier-check-project": "5.6.0",
+    "@jsenv/prettier-check-project": "5.6.1",
     "babel-eslint": "11.0.0-beta.0",
-    "eslint": "7.4.0",
+    "eslint": "7.7.0",
     "prettier": "2.0.5"
   }
 }

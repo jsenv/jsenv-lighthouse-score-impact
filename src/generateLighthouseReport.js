@@ -15,6 +15,8 @@ const require = createRequire(import.meta.url)
 const lighthouse = require("lighthouse")
 // eslint-disable-next-line import/no-unresolved
 const ReportGenerator = require("lighthouse/lighthouse-core/report/report-generator")
+// eslint-disable-next-line import/no-unresolved
+const { computeMedianRun } = require("lighthouse/lighthouse-core/lib/median-run.js")
 const chromeLauncher = require("chrome-launcher")
 
 export const generateLighthouseReport = async (
@@ -34,6 +36,7 @@ export const generateLighthouseReport = async (
     htmlFile = Boolean(projectDirectoryUrl),
     htmlFileRelativeUrl = "./lighthouse/lighthouse-report.html",
     htmlFileLog = true,
+    runCount = 1,
   },
 ) => {
   return wrapExternalFunction(
@@ -57,30 +60,29 @@ export const generateLighthouseReport = async (
         chromeFlags,
         port: chrome.port,
       }
-      const results = await createOperation({
-        cancellationToken,
-        start: () => lighthouse(url, lighthouseOptions, config),
-      })
-      // use results.lhr for the JS-consumeable output
-      // https://github.com/GoogleChrome/lighthouse/blob/master/types/lhr.d.ts
-      // use results.report for the HTML/JSON/CSV output as a string
-      // use results.artifacts for the trace/screenshots/other specific case you need (rarer)
-      await chrome.kill()
-      const { lhr } = results
 
-      const { runtimeError } = lhr
-      if (runtimeError) {
-        const error = new Error(runtimeError.message)
-        Object.assign(error, runtimeError)
-        throw error
-      }
+      const reports = []
+      await Array(runCount)
+        .fill()
+        .reduce(async (previous) => {
+          await previous
+          const report = await generateOneLighthouseReport(url, {
+            cancellationToken,
+            lighthouseOptions,
+            config,
+          })
+          reports.push(report)
+        }, Promise.resolve())
+
+      const lighthouseReport = computeMedianRun(reports)
+      await chrome.kill()
 
       const promises = []
       if (jsonFile) {
         promises.push(
           (async () => {
             const jsonFileUrl = resolveUrl(jsonFileRelativeUrl, projectDirectoryUrl)
-            const json = JSON.stringify(lhr, null, "  ")
+            const json = JSON.stringify(lighthouseReport, null, "  ")
             await writeFile(jsonFileUrl, json)
             if (jsonFileLog) {
               logger.info(`-> ${jsonFileUrl}`)
@@ -92,7 +94,7 @@ export const generateLighthouseReport = async (
         promises.push(
           (async () => {
             const htmlFileUrl = resolveUrl(htmlFileRelativeUrl, projectDirectoryUrl)
-            const html = ReportGenerator.generateReportHtml(lhr)
+            const html = ReportGenerator.generateReportHtml(lighthouseReport)
             await writeFile(htmlFileUrl, html)
             if (htmlFileLog) {
               logger.info(`-> ${htmlFileUrl}`)
@@ -102,8 +104,33 @@ export const generateLighthouseReport = async (
       }
       await Promise.all(promises)
 
-      return lhr
+      return lighthouseReport
     },
     { catchCancellation: true, unhandledRejectionStrict: true },
   )
+}
+
+const generateOneLighthouseReport = async (
+  url,
+  { cancellationToken, lighthouseOptions, config },
+) => {
+  const results = await createOperation({
+    cancellationToken,
+    start: () => lighthouse(url, lighthouseOptions, config),
+  })
+
+  // use results.lhr for the JS-consumeable output
+  // https://github.com/GoogleChrome/lighthouse/blob/master/types/lhr.d.ts
+  // use results.report for the HTML/JSON/CSV output as a string
+  // use results.artifacts for the trace/screenshots/other specific case you need (rarer)
+  const { lhr } = results
+
+  const { runtimeError } = lhr
+  if (runtimeError) {
+    const error = new Error(runtimeError.message)
+    Object.assign(error, runtimeError)
+    throw error
+  }
+
+  return lhr
 }
