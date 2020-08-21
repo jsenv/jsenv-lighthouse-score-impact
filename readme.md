@@ -60,8 +60,20 @@ import { createServer } from "http"
 import { generateLighthouseReport } from "@jsenv/lighthouse-score-impact"
 
 const server = createServer((request, response) => {
-  response.writeHead(200)
-  response.end("Hello, World!")
+  response.writeHead(200, {
+    "content-type": "text/html",
+  })
+  response.end(`<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    Hello, World!
+  </body>
+</html>`)
 })
 server.listen(8080)
 
@@ -88,16 +100,14 @@ reportLighthouseScoreImpact({
 ```yml
 name: lighthouse-score-impact
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   lighthouse-score-impact:
-    # Skip workflow for forks because secrets.GITHUB_TOKEN not allowed to post comments
-    if: github.event.pull_request.base.repo.full_name == github.event.pull_request.head.repo.full_name
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [13.12.0]
+        node: [14.5.0]
     runs-on: ${{ matrix.os }}
     name: lighthouse impact
     steps:
@@ -148,7 +158,7 @@ In your CI you must replicate this, the corresponding commands looks as below:
 ```console
 git init
 git remote add origin $GITHUB_REPOSITORY_URL
-git fetch --no-tags --prune --depth=1 origin $PULL_REQUEST_HEAD_REF
+git fetch --no-tags --prune origin $PULL_REQUEST_HEAD_REF
 git checkout origin/$PULL_REQUEST_HEAD_REF
 npm install
 ```

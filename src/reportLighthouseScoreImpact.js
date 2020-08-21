@@ -34,6 +34,7 @@ export const reportLighthouseScoreImpact = async ({
   jsonFileRelativeUrl = "./lighthouse/lighthouse-report.json",
   installCommand = "npm install",
   runLink,
+  commandLogs = false,
   skipGistWarning = false,
 }) => {
   return wrapExternalFunction(
@@ -59,12 +60,6 @@ export const reportLighthouseScoreImpact = async ({
 
       const logger = createLogger({ logLevel })
       logger.debug(`projectDirectoryUrl: ${projectDirectoryUrl}`)
-      const execCommandInProjectDirectory = (command) => {
-        logger.info(`> ${command}`)
-        return exec(command, {
-          cwd: urlToFileSystemPath(projectDirectoryUrl),
-        })
-      }
 
       logger.debug(
         `get pull request ${getPullRequestUrl({
@@ -80,20 +75,21 @@ export const reportLighthouseScoreImpact = async ({
       const pullRequestBase = pullRequest.base.ref
       const pullRequestHead = pullRequest.head.ref
 
+      const isFork = pullRequest.base.repo.full_name !== pullRequest.head.repo.full_name
+      const isInPullRequestWorkflow = process.env.GITHUB_EVENT_NAME === "pull_request"
+      if (isFork && isInPullRequestWorkflow) {
+        logger.warn(`The github token will certainly not be allowed to post comment in the pull request.
+This is because pull request comes from a fork and your workflow is runned on "pull_request".
+To fix this, change "pull_request" for "pull_request_target" in your workflow file.
+See https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target`)
+      }
+
       let headRef
-      if (pullRequest.base.repo.full_name === pullRequest.head.repo.full_name) {
-        headRef = pullRequestHead
-      } else {
-        const isInsideGithubWorkflow = Boolean(process.env.GITHUB_EVENT_NAME)
-        if (isInsideGithubWorkflow) {
-          // warn about
-          // https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token#permissions-for-the-github_token
-          logger.warn(
-            `pull request comes from a fork, github token is likely going to be unauthorized to post comment`,
-          )
-        }
+      if (isFork) {
         // https://github.community/t/checkout-a-branch-from-a-fork/276/2
         headRef = `refs/pull/${pullRequestNumber}/merge`
+      } else {
+        headRef = pullRequestHead
       }
 
       logger.debug(
@@ -163,22 +159,48 @@ ${renderGeneratedBy({ runLink })}`
         return comment
       }
 
+      const execCommandInProjectDirectory = (command) => {
+        logger.info(`> ${command}`)
+        return exec(command, {
+          cwd: urlToFileSystemPath(projectDirectoryUrl),
+          onLog: (string) => {
+            if (commandLogs) {
+              logger.info(string)
+            }
+          },
+          onErrorLog: (string) => logger.error(string),
+        })
+      }
+
+      const ensuteGitConfig = async (name, valueIfMissing) => {
+        try {
+          await execCommandInProjectDirectory(`git config ${name}`)
+          return () => {}
+        } catch (e) {
+          await execCommandInProjectDirectory(`git config ${name} "${valueIfMissing}"`)
+          return async () => {
+            await execCommandInProjectDirectory(`git config --unset ${name}`)
+          }
+        }
+      }
+
+      const ensureGitUserEmail = () => ensuteGitConfig("user.email", "you@example.com")
+      const ensureGitUserName = () => ensuteGitConfig("user.name", "Your Name")
+
+      const fetchRef = async (ref) => {
+        // cannot use depth=1 arg otherwise git merge might have merge conflicts
+        await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${ref}`)
+      }
+
       let baseReport
       try {
-        await execCommandInProjectDirectory(
-          `git fetch --no-tags --prune --depth=1 origin ${pullRequestBase}`,
-        )
+        await fetchRef(pullRequestBase)
         await execCommandInProjectDirectory(`git checkout origin/${pullRequestBase}`)
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
         baseReport = JSON.parse(
           await readFile(resolveUrl(jsonFileRelativeUrl, projectDirectoryUrl)),
         )
-
-        // generateLighthouseReport might generate files that could conflict when doing the merge
-        // reset to avoid potential merge conflicts
-        await execCommandInProjectDirectory(`git reset --hard origin/${pullRequestBase}`)
-
         logger.debug(`report for ${pullRequestBase} generated`)
       } catch (error) {
         logger.error(error.stack)
@@ -198,22 +220,17 @@ ${renderGeneratedBy({ runLink })}`
 
       let afterMergeReport
       try {
-        await execCommandInProjectDirectory(`git fetch --no-tags --prune origin ${headRef}`)
-        /*
-        When this is running in a pull request opened from a fork
-        the following happens:
-        - it works as expected
-        - git throw an error: Refusing to merge unrelated histories.
-        git merge accepts an --allow-unrelated-histories flag.
-        https://github.com/git/git/blob/master/Documentation/RelNotes/2.9.0.txt#L58-L68
-        But when using it git complains that it does not know who we are
-        and asks for git config email.
-
-        For now this work with fork but sometimes it does not.
-        If one day fork becomes supported by github action or someone is running
-        this code against forks from an other CI this needs to be fixed
-        */
-        await execCommandInProjectDirectory(`git merge FETCH_HEAD`)
+        // generateLighthouseReport might generate files that could conflict when doing the merge
+        // reset to avoid potential merge conflicts
+        await execCommandInProjectDirectory(`git reset --hard origin/${pullRequestBase}`)
+        await fetchRef(headRef)
+        // ensure there is user.email + user.name required to perform git merge command
+        // without them git would complain that it does not know who we are
+        const restoreGitUserEmail = await ensureGitUserEmail()
+        const restoreGitUserName = await ensureGitUserName()
+        await execCommandInProjectDirectory(`git merge FETCH_HEAD --allow-unrelated-histories`)
+        await restoreGitUserEmail()
+        await restoreGitUserName()
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
         afterMergeReport = JSON.parse(
