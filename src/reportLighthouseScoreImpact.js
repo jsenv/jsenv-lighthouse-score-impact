@@ -195,7 +195,7 @@ ${renderGeneratedBy({ runLink })}`
       let baseReport
       try {
         await fetchRef(pullRequestBase)
-        await execCommandInProjectDirectory(`git checkout origin/${pullRequestBase}`)
+        await execCommandInProjectDirectory(`git reset --hard origin/${pullRequestBase}`)
         await execCommandInProjectDirectory(installCommand)
         await execCommandInProjectDirectory(jsonFileGenerateCommand)
         baseReport = JSON.parse(
