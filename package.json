@@ -7,8 +7,7 @@
     "url": "https://github.com/jsenv/jsenv-lighthouse-score-impact"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "type": "module",
   "exports": {
