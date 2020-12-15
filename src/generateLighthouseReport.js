@@ -36,6 +36,7 @@ export const generateLighthouseReport = async (
     htmlFileRelativeUrl = "./lighthouse/lighthouse-report.html",
     htmlFileLog = true,
     runCount = 1,
+    delayBetweenEachRunInSeconds = 1,
   },
 ) => {
   return executeAsyncFunction(
@@ -63,8 +64,11 @@ export const generateLighthouseReport = async (
       const reports = []
       await Array(runCount)
         .fill()
-        .reduce(async (previous) => {
+        .reduce(async (previous, _, index) => {
           await previous
+          if (index > 0 && delayBetweenEachRunInSeconds) {
+            await new Promise((resolve) => setTimeout(resolve, delayBetweenEachRunInSeconds * 1000))
+          }
           const report = await generateOneLighthouseReport(url, {
             cancellationToken,
             lighthouseOptions,
