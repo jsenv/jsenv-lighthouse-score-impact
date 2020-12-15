@@ -27,6 +27,7 @@ export const generateLighthouseReport = async (
     headless = true,
     gpu = false,
     sandbox = false,
+    // https://github.com/GoogleChrome/lighthouse/blob/a58510583acd2f796557175ac949932618af49e7/docs/readme.md#testing-on-a-site-with-an-untrusted-certificate
     ignoreCertificateErrors = false,
     config = null,
     jsonFile = Boolean(projectDirectoryUrl),
@@ -46,7 +47,7 @@ export const generateLighthouseReport = async (
         ...(headless ? ["--headless"] : []),
         ...(gpu ? [] : ["--disable-gpu"]),
         ...(sandbox ? [] : ["--no-sandbox"]),
-        ...(ignoreCertificateErrors ? ["--ignore-certificate-errors"]: []),
+        ...(ignoreCertificateErrors ? ["--ignore-certificate-errors"] : []),
         // "--purge_hint_cache_store",
         "--incognito",
         "--disk-cache-size=1",

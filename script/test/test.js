@@ -9,5 +9,11 @@ executeTestPlan({
         launch: launchNode,
       },
     },
+    "test/**/generateLighthouseReport.test.js": {
+      node: {
+        launch: launchNode,
+        allocatedMs: 80 * 1000,
+      },
+    },
   },
 })
