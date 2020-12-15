@@ -2,11 +2,13 @@
 
 // https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token
 
-import { createOperation } from "@jsenv/cancellation"
+import {
+  createOperation,
+  createCancellationTokenForProcess,
+  executeAsyncFunction,
+} from "@jsenv/cancellation"
 import { createLogger } from "@jsenv/logger"
 import {
-  wrapExternalFunction,
-  createCancellationTokenForProcess,
   assertAndNormalizeDirectoryUrl,
   urlToFileSystemPath,
   readFile,
@@ -37,7 +39,7 @@ export const reportLighthouseScoreImpact = async ({
   commandLogs = false,
   skipGistWarning = false,
 }) => {
-  return wrapExternalFunction(
+  return executeAsyncFunction(
     async () => {
       projectDirectoryUrl = assertAndNormalizeDirectoryUrl(projectDirectoryUrl)
 
@@ -367,7 +369,7 @@ ${gistIdToUrl(afterMergeGistId)}`)
         comment,
       }
     },
-    { catchCancellation: true, unhandledRejectionStrict: true },
+    { catchCancellation: true, considerUnhandledRejectionsAsExceptions: true },
   )
 }
 

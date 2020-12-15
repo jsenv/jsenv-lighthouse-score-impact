@@ -2,13 +2,12 @@
 
 import { createRequire } from "module"
 import { createLogger } from "@jsenv/logger"
-import { createOperation } from "@jsenv/cancellation"
 import {
-  wrapExternalFunction,
+  createOperation,
   createCancellationTokenForProcess,
-  writeFile,
-  resolveUrl,
-} from "@jsenv/util"
+  executeAsyncFunction,
+} from "@jsenv/cancellation"
+import { writeFile, resolveUrl } from "@jsenv/util"
 
 const require = createRequire(import.meta.url)
 
@@ -39,7 +38,7 @@ export const generateLighthouseReport = async (
     runCount = 1,
   },
 ) => {
-  return wrapExternalFunction(
+  return executeAsyncFunction(
     async () => {
       const logger = createLogger({ logLevel })
       const chromeFlags = [
@@ -106,7 +105,7 @@ export const generateLighthouseReport = async (
 
       return lighthouseReport
     },
-    { catchCancellation: true, unhandledRejectionStrict: true },
+    { catchCancellation: true, considerUnhandledRejectionsAsExceptions: true },
   )
 }
 
