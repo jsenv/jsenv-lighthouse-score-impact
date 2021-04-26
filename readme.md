@@ -186,7 +186,7 @@ When outside a GitHub workflow you must provide `{ projectDirectoryUrl, githubTo
 
 The code below is an examle for Travis.
 
-`.github/workflows/report-lighthouse-impact.js`
+`./report-lighthouse-impact.js`
 
 ```js
 import { reportLighthouseScoreImpact, readGithubWorkflowEnv } from "@jsenv/lighthouse-score-impact"
@@ -215,7 +215,7 @@ In order to have `process.env.GITHUB_TOKEN` you need to create a GitHub token wi
 <details>
   <summary>5. Create your workflow file (depends the workflow you use)</summary>
 
-`reportFileSizeImpact` must be called in a state where your git repository has been cloned and you are currently on the pull request branch. Inside github workflow this is done by the following lines in `file-size-impact.yml`.
+`reportLighthouseScoreImpact` must be called in a state where your git repository has been cloned and you are currently on the pull request branch. Inside github workflow this is done by the following lines in [lighthouse-score-impact.yml](./.github/workflows/lighthouse-score-impact.yml#L16)
 
 ```yml
 uses: actions/checkout@v2
@@ -233,7 +233,6 @@ git remote add origin $GITHUB_REPOSITORY_URL
 git fetch --no-tags --prune origin $PULL_REQUEST_HEAD_REF
 git checkout origin/$PULL_REQUEST_HEAD_REF
 npm install
-node ./report-size-impact.js
 ```
 
 </details>
