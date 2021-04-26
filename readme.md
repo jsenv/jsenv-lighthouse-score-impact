@@ -44,6 +44,8 @@ npm install --save-dev @jsenv/lighthouse-score-impact
 <details>
   <summary>2. Create a file generating a lighthouse report</summary>
 
+You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
+
 `generate-lighthouse-report.js`
 
 ```js
@@ -73,8 +75,6 @@ generateLighthouseReport("http://127.0.0.1:8080", {
   jsonFileRelativeUrl: "./lighthouse/report.json",
 })
 ```
-
-> The file above is starting a server responding a basic html page to every request. It produces a lighthouse report for that basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
 
 </details>
 
@@ -141,6 +141,8 @@ npm install --save-dev @jsenv/lighthouse-score-impact
 <details>
   <summary>2. Create a file generating a lighthouse report</summary>
 
+You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
+
 `generate-lighthouse-report.js`
 
 ```js
@@ -170,8 +172,6 @@ generateLighthouseReport("http://127.0.0.1:8080", {
   jsonFileRelativeUrl: "./lighthouse/report.json",
 })
 ```
-
-> The file above is starting a server responding a basic html page to every request. It produces a lighthouse report for that basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
 
 </details>
 
