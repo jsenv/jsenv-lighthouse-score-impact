@@ -242,6 +242,8 @@ node ./report-size-impact.js
 
 The pull request comment can contain links to see lighthouse reports in [Lighthouse Report Viewer](https://googlechrome.github.io/lighthouse/viewer).
 
+![screenshot of pull request comment with links highlighted](./docs/comment-links-highlighted.png)
+
 To unlock this you need a GitHub token with the right to create gists. Every github workflow has access to a magic token `secrets.GITHUB_TOKEN`. But this token is not allowed to create gists. We need to update the worflow file like [lighthouse-score-impact.yml#L26](./.github/workflows/lighthouse-score-impact.yml#L26) to use an other token that will have the rights to create gists.
 
 ```diff
