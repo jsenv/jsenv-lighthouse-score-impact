@@ -44,7 +44,7 @@ npm install --save-dev @jsenv/lighthouse-score-impact
 <details>
   <summary>2. Create a file generating a lighthouse report</summary>
 
-You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
+You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, adapt the code to your own logic.
 
 `generate-lighthouse-report.js`
 
@@ -80,6 +80,8 @@ generateLighthouseReport("http://127.0.0.1:8080", {
 
 <details>
   <summary>3. A script file runned by the workflow</summary>
+
+This file will be called by the workflow: it generates lighthouse report before and after merging a pull request and post a comment in the pull request. Read more in [How it works](#How-it-works).
 
 `.github/workflows/report-lighthouse-impact.js`
 
@@ -141,7 +143,7 @@ npm install --save-dev @jsenv/lighthouse-score-impact
 <details>
   <summary>2. Create a file generating a lighthouse report</summary>
 
-You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, replace this your own logic.
+You need to create a file that will generate a lighthouse report. This file will use `generateLighthouseReport` function exported by `@jsenv/lighthouse-score-impact` to do so. The file below is an example producing a lighthouse report for a basic html page served locally. In order to get the lighthouse report of your website, adapt the code to your own logic.
 
 `generate-lighthouse-report.js`
 
@@ -177,6 +179,8 @@ generateLighthouseReport("http://127.0.0.1:8080", {
 
 <details>
   <summary>3. A script file runned by the workflow</summary>
+
+This file will be called by the workflow: it generates lighthouse report before and after merging a pull request and post a comment in the pull request. Read more in [How it works](#How-it-works).
 
 When outside a GitHub workflow you must provide `{ projectDirectoryUrl, githubToken, repositoryOwner, repositoryName, pullRequestNumber }` "manually" to `reportLighthouseScoreImpact`.
 
