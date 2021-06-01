@@ -64,10 +64,10 @@ jobs:
       - name: npm install
         run: npm install
       - name: publish package
-        run: node --experimental-top-level-await ./.github/workflows/main/publish-package.js
+        run: node --experimental-top-level-await ./.github/workflows/ci/publish-package.js
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: ensure github release
-        run: node --experimental-top-level-await ./.github/workflows/main/ensure-github-release-for-package.js
+        run: node --experimental-top-level-await ./.github/workflows/ci/ensure-github-release-for-package.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
