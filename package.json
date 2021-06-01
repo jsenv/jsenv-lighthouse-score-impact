@@ -1,6 +1,6 @@
 {
   "name": "@jsenv/lighthouse-score-impact",
-  "version": "2.4.8",
+  "version": "2.5.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,14 +12,10 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./dist/commonjs/main.cjs"
+      "import": "./index.js"
     }
   },
-  "module": "index.js",
-  "main": "dist/commonjs/main.cjs",
   "files": [
-    "/dist/",
     "/src/",
     "/index.js"
   ],
@@ -31,33 +27,33 @@
     "prettier-format-stage": "npm run prettier-format -- --staged",
     "prettier-check": "npm run prettier-format -- --dry-run",
     "upload-coverage": "node ./script/upload-coverage/upload-coverage.js",
-    "generate-comment-example": "node --no-warnings --experimental-json-modules ./docs/generate-comment-example.js",
-    "generate-commonjs-bundle": "node ./script/generate-commonjs-bundle/generate-commonjs-bundle.js",
-    "generate-import-map": "node ./script/generate-import-map/generate-import-map.js",
+    "generate-comment-example": "node ./docs/generate-comment-example.js",
+    "generate-import-map": "node --experimental-top-level-await ./script/generate-import-map/generate-import-map.js",
     "generate-lighthouse-report": "node ./script/generate-lighthouse-report/generate-lighthouse-report.js",
-    "dist": "npm run generate-commonjs-bundle",
     "postinstall": "npm run generate-import-map",
-    "prepublishOnly": "node ./script/transform-package/remove-postinstall.js && npm run dist",
+    "prepublishOnly": "node ./script/transform-package/remove-postinstall.js",
     "postpublish": "node ./script/transform-package/restore-postinstall.js"
   },
   "dependencies": {
-    "@jsenv/cancellation": "2.0.2",
-    "@jsenv/logger": "3.4.0",
-    "@jsenv/server": "5.2.3",
-    "@jsenv/util": "4.0.3",
-    "chrome-launcher": "0.13.4",
-    "lighthouse": "6.5.0"
+    "@jsenv/cancellation": "2.0.4",
+    "@jsenv/logger": "4.0.1",
+    "@jsenv/server": "6.0.3",
+    "@jsenv/util": "4.1.1",
+    "chrome-launcher": "0.14.0",
+    "lighthouse": "7.5.0"
   },
   "devDependencies": {
-    "@jsenv/assert": "2.2.1",
+    "@jsenv/assert": "2.2.5",
     "@jsenv/codecov-upload": "3.4.3",
-    "@jsenv/core": "17.2.0",
-    "@jsenv/eslint-config": "12.8.0",
-    "@jsenv/github-release-package": "1.2.2",
-    "@jsenv/node-module-import-map": "12.2.1",
-    "@jsenv/package-publish": "1.5.1",
+    "@jsenv/core": "18.1.6",
+    "@jsenv/eslint-config": "15.0.1",
+    "@jsenv/github-release-package": "1.2.3",
+    "@jsenv/importmap-eslint-resolver": "^5.0.0",
+    "@jsenv/node-module-import-map": "13.4.5",
+    "@jsenv/package-publish": "1.6.2",
     "@jsenv/prettier-check-project": "5.6.1",
-    "eslint": "7.15.0",
-    "prettier": "2.2.1"
+    "eslint": "7.27.0",
+    "eslint-plugin-import": "^2.23.4",
+    "prettier": "2.3.0"
   }
 }

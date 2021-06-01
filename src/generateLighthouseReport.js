@@ -1,6 +1,7 @@
 // https://github.com/GoogleChrome/lighthouse/blob/5a14deb5c4e0ec4e8e58f50ff72b53851b021bcf/docs/readme.md#using-programmatically
 
 import { createRequire } from "module"
+
 import { createLogger } from "@jsenv/logger"
 import {
   createOperation,
