@@ -2,7 +2,6 @@
 
 Add lighthouse score impact into GitHub pull requests.
 
-[![github package](https://img.shields.io/github/package-json/v/jsenv/jsenv-lighthouse-score-impact.svg?label=package&logo=github)](https://github.com/jsenv/jsenv-lighthouse-score-impact/packages)
 [![npm package](https://img.shields.io/npm/v/@jsenv/lighthouse-score-impact.svg?logo=npm&label=package)](https://www.npmjs.com/package/@jsenv/lighthouse-score-impact)
 [![workflow status](https://github.com/jsenv/jsenv-lighthouse-score-impact/workflows/ci/badge.svg)](https://github.com/jsenv/jsenv-lighthouse-score-impact/actions?workflow=ci)
 [![codecov](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-impact/branch/master/graph/badge.svg)](https://codecov.io/gh/jsenv/jsenv-lighthouse-score-impact)
