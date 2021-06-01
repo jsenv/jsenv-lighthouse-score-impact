@@ -67,6 +67,7 @@ jobs:
         run: node --experimental-top-level-await ./.github/workflows/ci/publish-package.js
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: ensure github release
         run: node --experimental-top-level-await ./.github/workflows/ci/ensure-github-release-for-package.js
         env:
