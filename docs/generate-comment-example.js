@@ -5,9 +5,13 @@ https://github.com/actions/toolkit/tree/master/packages/core
 
 */
 
-import { writeFile, resolveUrl } from "@jsenv/util"
+import { writeFile, resolveUrl, readFile } from "@jsenv/util"
 import { generateCommentBody } from "../src/internal/generateCommentBody.js"
-import normalReport from "./lighthouse-report-examples/normal.json"
+
+const normalReport = await readFile(
+  new URL("./lighthouse-report-examples/normal.json", import.meta.url),
+  { as: "json" },
+)
 
 const examples = {
   basic: generateCommentBody({

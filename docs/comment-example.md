@@ -14,7 +14,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -89,7 +89,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -334,7 +334,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -393,7 +393,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -518,7 +518,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -613,7 +613,7 @@
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>

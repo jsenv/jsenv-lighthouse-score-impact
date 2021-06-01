@@ -94,6 +94,21 @@ const renderCategory = (
   const diff = afterMergeDisplayedScore - baseDisplayedScore
   const diffDisplayValue = diff === 0 ? "no impact" : formatNumericDiff(diff)
 
+  /*
+changer le texte du summary pour ceci:
+
+performance score: 100 (+10)
+
+ou alors
+
+performance score: 100 (no impact)
+
+
+et quand on ouvre on a le détail
+
+
+  */
+
   return `<details>
   <summary>${category} (${diffDisplayValue})</summary>
   ${
@@ -118,7 +133,7 @@ const renderCategory = (
 
 const scoreToDisplayedScore = (floatingNumber) => Math.round(floatingNumber * 100)
 
-const renderCategoryScore = (category, { baseReport, afterMergeReport, pullRequestBase }) => {
+const renderCategoryScore = (category, { baseReport, afterMergeReport }) => {
   const baseDisplayedScore = scoreToDisplayedScore(baseReport.categories[category].score)
   const afterMergeDisplayedScore = scoreToDisplayedScore(
     afterMergeReport.categories[category].score,
@@ -131,7 +146,7 @@ const renderCategoryScore = (category, { baseReport, afterMergeReport, pullReque
     <thead>
       <tr>
         <th nowrap>impact</th>
-        <th nowrap>${pullRequestBase}</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>

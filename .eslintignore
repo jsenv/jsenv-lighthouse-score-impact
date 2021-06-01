@@ -1,6 +1,4 @@
 !/.github/
-/.github/workflows/**/node_modules/
 /.jsenv/
 /coverage/
-/dist/
 /node_modules/

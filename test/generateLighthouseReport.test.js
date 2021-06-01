@@ -1,4 +1,5 @@
 import { createServer } from "http"
+
 import { generateLighthouseReport } from "@jsenv/lighthouse-score-impact"
 import { assert } from "@jsenv/assert"
 
