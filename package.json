@@ -12,14 +12,10 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./dist/commonjs/main.cjs"
+      "import": "./index.js"
     }
   },
-  "module": "index.js",
-  "main": "dist/commonjs/main.cjs",
   "files": [
-    "/dist/",
     "/src/",
     "/index.js"
   ],
@@ -32,12 +28,10 @@
     "prettier-check": "npm run prettier-format -- --dry-run",
     "upload-coverage": "node ./script/upload-coverage/upload-coverage.js",
     "generate-comment-example": "node --no-warnings --experimental-json-modules ./docs/generate-comment-example.js",
-    "generate-commonjs-bundle": "node ./script/generate-commonjs-bundle/generate-commonjs-bundle.js",
     "generate-import-map": "node ./script/generate-import-map/generate-import-map.js",
     "generate-lighthouse-report": "node ./script/generate-lighthouse-report/generate-lighthouse-report.js",
-    "dist": "npm run generate-commonjs-bundle",
     "postinstall": "npm run generate-import-map",
-    "prepublishOnly": "node ./script/transform-package/remove-postinstall.js && npm run dist",
+    "prepublishOnly": "node ./script/transform-package/remove-postinstall.js",
     "postpublish": "node ./script/transform-package/restore-postinstall.js"
   },
   "dependencies": {
