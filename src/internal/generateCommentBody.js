@@ -94,34 +94,15 @@ const renderCategory = (
   const diff = afterMergeDisplayedScore - baseDisplayedScore
   const diffDisplayValue = diff === 0 ? "no impact" : formatNumericDiff(diff)
 
-  /*
-changer le texte du summary pour ceci:
-
-performance score: 100 (+10)
-
-ou alors
-
-performance score: 100 (no impact)
-
-
-et quand on ouvre on a le détail
-
-
-  */
+  const summaryText = `${category} score: ${afterMergeDisplayedScore} (${diffDisplayValue})`
 
   return `<details>
-  <summary>${category} (${diffDisplayValue})</summary>
+  <summary>${summaryText}</summary>
   ${
     category === "performance"
       ? `<br /><blockquote>Keep in mind performance score variation may be caused by external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>`
       : ""
   }
-  ${renderCategoryScore(category, {
-    baseReport,
-    afterMergeReport,
-    pullRequestBase,
-    pullRequestHead,
-  })}
   ${renderCategoryAudits(category, {
     baseReport,
     afterMergeReport,
@@ -133,34 +114,7 @@ et quand on ouvre on a le détail
 
 const scoreToDisplayedScore = (floatingNumber) => Math.round(floatingNumber * 100)
 
-const renderCategoryScore = (category, { baseReport, afterMergeReport }) => {
-  const baseDisplayedScore = scoreToDisplayedScore(baseReport.categories[category].score)
-  const afterMergeDisplayedScore = scoreToDisplayedScore(
-    afterMergeReport.categories[category].score,
-  )
-  const diff = afterMergeDisplayedScore - baseDisplayedScore
-  const diffDisplayValue = diff === 0 ? "none" : formatNumericDiff(diff)
-
-  return `<h5>Overall impact on ${category} score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>${diffDisplayValue}</td>
-        <td nowrap>${baseDisplayedScore}</td>
-        <td nowrap>${afterMergeDisplayedScore}</td>
-      </tr>
-    </tbody>
-  </table>`
-}
-
-const renderCategoryAudits = (category, { baseReport, afterMergeReport, pullRequestBase }) => {
+const renderCategoryAudits = (category, { baseReport, afterMergeReport }) => {
   const { auditRefs } = baseReport.categories[category]
   const audits = []
   auditRefs.forEach((auditRef) => {
@@ -217,13 +171,13 @@ const renderCategoryAudits = (category, { baseReport, afterMergeReport, pullRequ
     ])
   })
 
-  return `<h5>Detailed impact on ${category} score</h5>
+  return `
   <table>
     <thead>
       <tr>
         <th nowrap>${category} audit</th>
         <th nowrap>impact</th>
-        <th nowrap>${pullRequestBase}</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>

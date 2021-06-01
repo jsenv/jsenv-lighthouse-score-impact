@@ -7,32 +7,15 @@
 
 
 <details>
-  <summary>perf (+10)</summary>
+  <summary>perf score: 90 (+10)</summary>
   
-  <h5>Overall impact on perf score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>+10</td>
-        <td nowrap>80</td>
-        <td nowrap>90</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on perf score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>perf audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -82,32 +65,15 @@
 
 
 <details>
-  <summary>performance (no impact)</summary>
+  <summary>performance score: 99 (no impact)</summary>
   <br /><blockquote>Keep in mind performance score variation may be caused by external factors. <a href="https://github.com/GoogleChrome/lighthouse/blob/91b4461c214c0e05d318ec96f6585dcca52a51cc/docs/variability.md#score-variability">Learn more</a>.</blockquote>
-  <h5>Overall impact on performance score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>none</td>
-        <td nowrap>99</td>
-        <td nowrap>99</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on performance score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>performance audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -327,32 +293,15 @@
 </details>
 
 <details>
-  <summary>accessibility (no impact)</summary>
+  <summary>accessibility score: 84 (no impact)</summary>
   
-  <h5>Overall impact on accessibility score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>none</td>
-        <td nowrap>84</td>
-        <td nowrap>84</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on accessibility score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>accessibility audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -386,32 +335,15 @@
 </details>
 
 <details>
-  <summary>best-practices (no impact)</summary>
+  <summary>best-practices score: 86 (no impact)</summary>
   
-  <h5>Overall impact on best-practices score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>none</td>
-        <td nowrap>86</td>
-        <td nowrap>86</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on best-practices score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>best-practices audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -511,32 +443,15 @@
 </details>
 
 <details>
-  <summary>seo (no impact)</summary>
+  <summary>seo score: 60 (no impact)</summary>
   
-  <h5>Overall impact on seo score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>none</td>
-        <td nowrap>60</td>
-        <td nowrap>60</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on seo score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>seo audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
@@ -606,32 +521,15 @@
 </details>
 
 <details>
-  <summary>pwa (no impact)</summary>
+  <summary>pwa score: 33 (no impact)</summary>
   
-  <h5>Overall impact on pwa score</h5>
-  <table>
-    <thead>
-      <tr>
-        <th nowrap>impact</th>
-        <th nowrap>before merge</th>
-        <th nowrap>after merge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td nowrap>none</td>
-        <td nowrap>33</td>
-        <td nowrap>33</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5>Detailed impact on pwa score</h5>
+  
   <table>
     <thead>
       <tr>
         <th nowrap>pwa audit</th>
         <th nowrap>impact</th>
-        <th nowrap>base</th>
+        <th nowrap>before merge</th>
         <th nowrap>after merge</th>
       </tr>
     </thead>
